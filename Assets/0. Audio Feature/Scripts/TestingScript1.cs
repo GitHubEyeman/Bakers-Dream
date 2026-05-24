@@ -5,10 +5,13 @@ using UnityEngine.InputSystem;
 public class TestingScript1 : MonoBehaviour
 {
     
+    public IngredientsData ingredients;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         AudioManager.Instance.PlayMusic("Donden");
+        Debug.Log("" + ingredients.ingredientName);
     }
 
 
@@ -17,7 +20,7 @@ public class TestingScript1 : MonoBehaviour
     void Update()
     {
         
-
+        
         
         if (Keyboard.current != null && Keyboard.current.digit1Key.wasPressedThisFrame) {
             AudioManager.Instance.CrossfadeMusic("Donden");
