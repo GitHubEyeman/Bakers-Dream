@@ -1,6 +1,7 @@
 using System.Data.Common;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class TestingScript1 : MonoBehaviour
 {
@@ -34,8 +35,8 @@ public class TestingScript1 : MonoBehaviour
             AudioManager.Instance.PlaySFX("sfx2", 10);
 
         }else if (Keyboard.current != null && Keyboard.current.digit5Key.wasPressedThisFrame) {
-            SaveManager.Instance.LoadGame();
- 
+            //SaveManager.Instance.LoadGame();
+            SceneManager.LoadScene(0);
         }else if (Keyboard.current != null && Keyboard.current.digit0Key.wasPressedThisFrame) {
             AudioManager.Instance.StopMusic();
 
