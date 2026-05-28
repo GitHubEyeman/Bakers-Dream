@@ -4332,6 +4332,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ingreMixing
   outputText: {fileID: 1067668884}
   separator: ', '
+  currentMouseType: 0
+  currentScoop: 2
+  cupMeasure: 1
 --- !u!1 &1083667365
 GameObject:
   m_ObjectHideFlags: 0
@@ -5803,6 +5806,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ingreMixing
   outputText: {fileID: 0}
   separator: ', '
+  currentMouseType: 0
+  currentScoop: 2
+  cupMeasure: 1
 --- !u!1 &1631690219
 GameObject:
   m_ObjectHideFlags: 0
