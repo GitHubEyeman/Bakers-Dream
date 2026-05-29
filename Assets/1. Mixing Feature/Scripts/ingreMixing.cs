@@ -45,6 +45,7 @@ public class ingreMixing : MonoBehaviour
 
     void Start()
     {
+        MouseType = MouseType.Normal;
         if (outputText != null)
             outputText.text = string.Empty;
     }
