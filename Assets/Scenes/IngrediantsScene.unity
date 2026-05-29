@@ -3887,16 +3887,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
-        m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
-        m_MethodName: AddIngredient
-        m_Mode: 5
+      - m_Target: {fileID: 1580115640}
+        m_TargetAssemblyTypeName: IngrePrep, Assembly-CSharp
+        m_MethodName: CupMode
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: flour
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1044086679
@@ -5322,16 +5322,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1580115635}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2a454867d0a9cc4f8a1a3a633d69235, type: 3}
+  m_Script: {fileID: 11500000, guid: 17908f2d4fb3ac54299dd76d0b4f4dfb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ingreMixing
-  CupRuler: {fileID: 0}
-  CupMeasurement: 100
-  outputText: {fileID: 0}
-  separator: ', '
+  m_EditorClassIdentifier: Assembly-CSharp::IngrePrep
+  CupRuler: {fileID: 2129097622}
+  CupMeasurement: 0
   currentMouseType: 0
   currentScoop: 2
-  cupMeasure: 1
 --- !u!1 &1631690219
 GameObject:
   m_ObjectHideFlags: 0
@@ -6701,7 +6698,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1360.93, y: 365.21}
+  m_AnchoredPosition: {x: -779.99994, y: 362.56}
   m_SizeDelta: {x: -1639.96, y: -788.17}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1799468882
@@ -7021,7 +7018,7 @@ GameObject:
   - component: {fileID: 1810680035}
   - component: {fileID: 1810680034}
   m_Layer: 5
-  m_Name: LiquidMesurementBtn
+  m_Name: ScoopsBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7091,16 +7088,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
-        m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
-        m_MethodName: AddIngredient
-        m_Mode: 5
+      - m_Target: {fileID: 1580115640}
+        m_TargetAssemblyTypeName: IngrePrep, Assembly-CSharp
+        m_MethodName: ScoopMode
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: flour
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1810680035
