@@ -1,8 +1,12 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class ingreMixing : MonoBehaviour
 {
+    [SerializeField] private Slider CupRuler;
     // Which tool/mode the "mouse" (tool) is using
     public enum MouseType
     {
@@ -23,6 +27,10 @@ public class ingreMixing : MonoBehaviour
         Teaspoon,
         Custom
     }
+    public int CupMeasurement = 100; // Default cup measurement in ml (for reference, not used directly in code)
+
+    
+
 
     [Header("UI")]
     [Tooltip("TextMeshProUGUI component that will show the stacked ingredient list")]
@@ -45,9 +53,15 @@ public class ingreMixing : MonoBehaviour
 
     void Start()
     {
-        MouseType = MouseType.Normal;
         if (outputText != null)
             outputText.text = string.Empty;
+
+        CupRuler.onValueChanged.AddListener((value) =>
+        {
+            cupMeasure = value;
+            print($"Cup measure updated to: {cupMeasure} cups");
+            // Optionally update UI or do something with the new cupMeasure value
+        });
     }
 
     // Simple existing API - unchanged
@@ -99,8 +113,10 @@ public class ingreMixing : MonoBehaviour
         AddIngredient(display);
     }
 
-    // Optional: clear the stacked ingredients (hook up a Clear button)
-    public void ClearIngredients()
+    
+
+// Optional: clear the stacked ingredients (hook up a Clear button)
+public void ClearIngredients()
     {
         if (outputText == null) return;
         outputText.text = string.Empty;
