@@ -5329,6 +5329,8 @@ MonoBehaviour:
   CupMeasurement: 0
   currentMouseType: 0
   currentScoop: 2
+  currentCup: 0
+  currentIngredient: 0
 --- !u!1 &1631690219
 GameObject:
   m_ObjectHideFlags: 0
@@ -6698,7 +6700,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -779.99994, y: 362.56}
+  m_AnchoredPosition: {x: -780, y: 362.56}
   m_SizeDelta: {x: -1639.96, y: -788.17}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1799468882
@@ -8554,7 +8556,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 252.11, y: -145.03}
+  m_AnchoredPosition: {x: 252.10999, y: -145.03}
   m_SizeDelta: {x: 42.02, y: 267.16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2129097622
@@ -8601,10 +8603,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 728608374}
   m_HandleRect: {fileID: 687724032}
   m_Direction: 2
-  m_MinValue: 100
-  m_MaxValue: 1000
+  m_MinValue: 1
+  m_MaxValue: 5
   m_WholeNumbers: 1
-  m_Value: 992
+  m_Value: 5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
