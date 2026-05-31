@@ -267,17 +267,19 @@ public class IngrePrep : MonoBehaviour
 
     }
 
-    public void SetIngreList() {
+    public void SetIngreList()
     {
-        string ingre;
-        int amount;
-        if (currentMouseType == MouseType.Normal)
         {
-            if (currentIngredient == IngredientType.Eggs)
+            string ingre;
+            int amount;
+            if (currentMouseType == MouseType.Normal)
+            {
+                if (currentIngredient == IngredientType.Eggs)
                 {
                     print("Egg 1");
-                    IngreList.Add(
+                    IngreList.Add("Egg", 1);
                 }
+            }
         }
     }
 }
