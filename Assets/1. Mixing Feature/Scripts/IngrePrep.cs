@@ -57,7 +57,7 @@ public class IngrePrep : MonoBehaviour
     public ScoopMeasure currentScoop = ScoopMeasure.FullScoops;
     public CupMeasure currentCup = CupMeasure.Fullcups;
     public IngredientType currentIngredient = IngredientType.None;
-    Dictionary<string,int> IngreList = new Dictionary<string, int>();
+    Dictionary<string, int> IngreList = new Dictionary<string, int>();
 
     void Start()
     {
@@ -176,7 +176,7 @@ public class IngrePrep : MonoBehaviour
 
     public void SetIngredientFlour()
     {
-        if (currentMouseType == MouseType.Scoop
+        if (currentMouseType == MouseType.Scoop)
         {
             currentIngredient = IngredientType.Flour;
             print("Ingredient set to: Flour");
@@ -260,5 +260,24 @@ public class IngrePrep : MonoBehaviour
         }
         else
             print("Eggs can only be set in Normal mode");
+    }
+
+    public void inputIngre()
+    {
+
+    }
+
+    public void SetIngreList() {
+    {
+        string ingre;
+        int amount;
+        if (currentMouseType == MouseType.Normal)
+        {
+            if (currentIngredient == IngredientType.Eggs)
+                {
+                    print("Egg 1");
+                    IngreList.Add(
+                }
+        }
     }
 }
