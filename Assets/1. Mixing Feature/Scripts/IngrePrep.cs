@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -7,6 +8,7 @@ using TMPro;
 public class IngrePrep : MonoBehaviour
 {
     [SerializeField] private Slider CupRuler;
+    [SerializeField] private TextMeshProUGUI IngreListText; // assign in Inspector
 
     //Change MouseType
     public enum MouseType
@@ -93,6 +95,9 @@ public class IngrePrep : MonoBehaviour
                 // Optionally update UI or do something with the new cupMeasure value
             });
         }
+
+        // initial display
+        UpdateIngreListDisplay();
     }
 
     // Update is called once per frame
@@ -262,24 +267,133 @@ public class IngrePrep : MonoBehaviour
             print("Eggs can only be set in Normal mode");
     }
 
+    // Called by UI Button: adds current selection to the list and updates the TMP display
     public void inputIngre()
     {
-
+        SetIngreList();
+        UpdateIngreListDisplay();
     }
 
     public void SetIngreList()
     {
+        // Adds or increments the selected ingredient in IngreList.
+        // Rules (per request):
+        // - Scoops: Flour, Yeast, Salt, Sugar  -> use currentScoop (use enum ordinal + 1 for now)
+        // - Cups: Water, OliveOil, Honey, Milk -> use currentCup  (use enum ordinal + 1 for now)
+        // - Scale: Butter                         -> placeholder grams (100)
+        // - Normal: Eggs                          -> 1 unit
+        // - Whisk: not used
+        string key;
+        int amount = 0;
+
+        if (currentIngredient == IngredientType.None)
         {
-            string ingre;
-            int amount;
-            if (currentMouseType == MouseType.Normal)
-            {
-                if (currentIngredient == IngredientType.Eggs)
-                {
-                    print("Egg 1");
-                    IngreList.Add("Egg", 1);
-                }
-            }
+            print("No ingredient selected");
+            return;
         }
+
+        key = currentIngredient.ToString();
+
+        // Determine amount based on ingredient and active tool
+        switch (currentIngredient)
+        {
+            case IngredientType.Flour:
+            case IngredientType.Yeast:
+            case IngredientType.Salt:
+            case IngredientType.Sugar:
+                // require Scoop mode
+                if (currentMouseType != MouseType.Scoop)
+                {
+                    print($"{currentIngredient} must be added in Scoop mode");
+                    return;
+                }
+                // Use enum index + 1 for a placeholder amount (Full=1, Half=2, etc. as requested)
+                amount = (int)currentScoop + 1;
+                print($"Measured {amount} scoop(s) of {key}");
+                break;
+
+            case IngredientType.Water:
+            case IngredientType.OliveOil:
+            case IngredientType.Honey:
+            case IngredientType.Milk:
+                // require Cup mode
+                if (currentMouseType != MouseType.Cup)
+                {
+                    print($"{currentIngredient} must be added in Cup mode");
+                    return;
+                }
+                // Use enum index + 1 for a placeholder amount (will replace with ml later)
+                amount = (int)currentCup + 1;
+                print($"Measured {amount} cup-measure(s) of {key}");
+                break;
+
+            case IngredientType.Butter:
+                // require Scale mode
+                if (currentMouseType != MouseType.Scale)
+                {
+                    print("Butter must be added in Scale mode");
+                    return;
+                }
+                // Placeholder grams for now
+                amount = 100;
+                print($"Measured {amount} grams of {key}");
+                break;
+
+            case IngredientType.Eggs:
+                // require Normal mode
+                if (currentMouseType != MouseType.Normal)
+                {
+                    print("Eggs must be added in Normal mode");
+                    return;
+                }
+                amount = 1;
+                print($"Measured {amount} unit(s) of {key}");
+                break;
+
+            default:
+                print("Selected ingredient is not supported for adding");
+                return;
+        }
+
+        // Add or increment in the dictionary
+        if (IngreList.ContainsKey(key))
+        {
+            IngreList[key] += amount;
+            print($"Updated {key} -> {IngreList[key]}");
+        }
+        else
+        {
+            IngreList.Add(key, amount);
+            print($"Added {key} -> {amount}");
+        }
+    }
+
+    // Build and assign display string in the format: {Ingredient amount} per line
+    private void UpdateIngreListDisplay()
+    {
+        if (IngreListText == null)
+        {
+            print("IngreListText (TMP) not assigned.");
+            return;
+        }
+
+        if (IngreList.Count == 0)
+        {
+            IngreListText.text = "";
+            return;
+        }
+
+        var sb = new StringBuilder();
+        foreach (var kv in IngreList)
+        {
+            sb.Append('{');
+            sb.Append(kv.Key);
+            sb.Append(' ');
+            sb.Append(kv.Value);
+            sb.Append('}');
+            sb.AppendLine();
+        }
+
+        IngreListText.text = sb.ToString();
     }
 }

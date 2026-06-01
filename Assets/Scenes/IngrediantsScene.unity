@@ -409,7 +409,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: ClearIngredients
         m_Mode: 1
@@ -679,7 +679,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -1983,7 +1983,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -2116,7 +2116,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -2249,7 +2249,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -2519,7 +2519,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -3347,7 +3347,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -3754,7 +3754,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -4084,16 +4084,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1067668882}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2a454867d0a9cc4f8a1a3a633d69235, type: 3}
+  m_Script: {fileID: 11500000, guid: 17908f2d4fb3ac54299dd76d0b4f4dfb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ingreMixing
+  m_EditorClassIdentifier: Assembly-CSharp::IngrePrep
   CupRuler: {fileID: 0}
-  CupMeasurement: 100
-  outputText: {fileID: 1067668884}
-  separator: ', '
+  IngreListText: {fileID: 1067668884}
+  CupMeasurement: 0
   currentMouseType: 0
-  currentScoop: 2
-  cupMeasure: 1
+  currentScoop: 0
+  currentCup: 0
+  currentIngredient: 0
 --- !u!1 &1083667365
 GameObject:
   m_ObjectHideFlags: 0
@@ -4177,7 +4177,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -4514,7 +4514,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -4683,7 +4683,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -5017,7 +5017,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -5326,6 +5326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IngrePrep
   CupRuler: {fileID: 2129097622}
+  IngreListText: {fileID: 0}
   CupMeasurement: 0
   currentMouseType: 0
   currentScoop: 2
@@ -5414,7 +5415,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -5547,7 +5548,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -5817,7 +5818,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -6208,7 +6209,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -6615,7 +6616,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -6824,7 +6825,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -6957,7 +6958,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -7902,7 +7903,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -8272,7 +8273,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
@@ -8405,7 +8406,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1067668886}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ingreMixing, Assembly-CSharp
         m_MethodName: AddIngredient
         m_Mode: 5
