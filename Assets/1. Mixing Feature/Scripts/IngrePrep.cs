@@ -396,4 +396,11 @@ public class IngrePrep : MonoBehaviour
 
         IngreListText.text = sb.ToString();
     }
+
+    public void ClearIngreList()
+    {
+        IngreList.Clear();
+        UpdateIngreListDisplay();
+        print("Ingredient list cleared");
+    }
 }
