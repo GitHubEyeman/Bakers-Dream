@@ -48,7 +48,7 @@ public class DoughKneadingDirectInput : MonoBehaviour
 
     private void ResetDoughState()
     {
-        StartTextureBlend(1.0f-currentIncompleteValue/100f , 0.1f);
+        StartTextureBlend(Mathf.Clamp((1.0f-currentIncompleteValue/100f)*2.5f, 0, 0.90f) , 0.1f);
         doughMesh.SetBlendShapeWeight(INDEX_INCOMPLETE_DOUGH, currentIncompleteValue);
         StartBlendShapeTween(INDEX_START_GRAB, 0f, 0.1f);
         //doughMesh.SetBlendShapeWeight(INDEX_PULL, 0f);
@@ -78,11 +78,13 @@ public class DoughKneadingDirectInput : MonoBehaviour
                     mouseStartPos = currentMousePos;
                     //doughMesh.SetBlendShapeWeight(INDEX_START_GRAB, 100f);
                     StartBlendShapeTween(INDEX_START_GRAB, 100f, 0.1f);
+                    AudioManager.Instance.PlaySFX("monsfx",4);
                 }
                 else if (hit.collider.CompareTag("botDough") && isPullFullyCompleted)
                 {
                     isPushActive = true;
                     mouseStartPos = currentMousePos;
+                    AudioManager.Instance.PlaySFX("moonsfx");
                 }
             }
         }
@@ -120,6 +122,7 @@ public class DoughKneadingDirectInput : MonoBehaviour
                 if (Mathf.Approximately(finalPullWeight, 100f))
                 {
                     isPullFullyCompleted = true;
+                    
                 }
                 else
                 {
@@ -173,7 +176,7 @@ public class DoughKneadingDirectInput : MonoBehaviour
         doughMesh.SetBlendShapeWeight(INDEX_PULL, 0f);
         doughMesh.SetBlendShapeWeight(INDEX_PUSH, 0f);
 
-        StartTextureBlend( 1f, 0.1f);
+        //StartTextureBlend( 0.95f, 0.1f);
         
         Debug.Log("Dough is perfectly kneaded!");
         this.enabled = false;

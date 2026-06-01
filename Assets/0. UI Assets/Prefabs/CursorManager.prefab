@@ -123,8 +123,13 @@ MonoBehaviour:
   CursorImageObject: {fileID: 2088349096727135020}
   normalSize: {x: 32, y: 32}
   leftClickSize: {x: 32, y: 32}
-  defaultSprite: {fileID: 21300000, guid: 4090ae56ce422ec25be9d03320466ea7, type: 3}
-  leftClickSprite: {fileID: 21300000, guid: e8854eeb538c00f4a8f1c0f788e1659f, type: 3}
+  spriteSetNo: 0
+  defaultSprite:
+  - {fileID: 21300000, guid: 4090ae56ce422ec25be9d03320466ea7, type: 3}
+  - {fileID: 21300000, guid: 256eec17917928d1a9170ae720c4f2d1, type: 3}
+  leftClickSprite:
+  - {fileID: 21300000, guid: e8854eeb538c00f4a8f1c0f788e1659f, type: 3}
+  - {fileID: 21300000, guid: 932c1aeed273995a79c13ab725e4e919, type: 3}
 --- !u!1 &7993070578752552405
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,7 +190,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!114 &4825024648756038042
 MonoBehaviour:

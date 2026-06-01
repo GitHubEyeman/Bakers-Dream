@@ -79,6 +79,10 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 4c813562f76db144382374e3aa257c88, type: 3}
   - name: sfx2
     clip: {fileID: 8300000, guid: e4eece632ce6edca0b48c0ba9f1cce91, type: 3}
+  - name: moonsfx
+    clip: {fileID: 8300000, guid: e01a28aff70e20470a78ca4cb7233732, type: 3}
+  - name: monsfx
+    clip: {fileID: 8300000, guid: acd661ccf2d647fa6aa614f0f116b15b, type: 3}
 --- !u!1 &4677555375257585172
 GameObject:
   m_ObjectHideFlags: 0

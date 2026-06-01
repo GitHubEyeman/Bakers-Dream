@@ -15,6 +15,8 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject _SettingsMenuUI;
     [SerializeField] private Slider _MusicVolume;
     [SerializeField] private Slider _SFXVolume;
+    [SerializeField] private CursorManager _CursorManager;
+    private int _prevCursorSetNo = 0;
 
     void Start()
     {
@@ -38,6 +40,9 @@ public class PauseMenu : MonoBehaviour
             else
             {
                 Pause();
+                if (_CursorManager != null)
+                {_prevCursorSetNo = _CursorManager.SpriteSetNo;
+                _CursorManager.SpriteSetNo = 0;}
             }
         }
     }
@@ -49,6 +54,7 @@ public class PauseMenu : MonoBehaviour
         _PauseMenuUI.SetActive(false);
         Time.timeScale = 1f; // Normal game speed
         isPaused = false;
+        if (_CursorManager != null) _CursorManager.SpriteSetNo = _prevCursorSetNo;
     }
 
     // Freezes time and displays the pause UI

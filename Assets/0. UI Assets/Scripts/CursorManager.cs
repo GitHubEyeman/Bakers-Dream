@@ -14,8 +14,11 @@ public class CursorManager : MonoBehaviour
     [SerializeField] private Vector2 leftClickSize = new Vector2(32f, 32f); // Slightly smaller when squeezing dough
 
     [Header("Sprites")]
-    [SerializeField] private Sprite defaultSprite;
-    [SerializeField] private Sprite leftClickSprite;
+    [SerializeField] private int spriteSetNo = 0;
+    [SerializeField] private Sprite[] defaultSprite;
+    [SerializeField] private Sprite[] leftClickSprite;
+
+    public int SpriteSetNo {get => spriteSetNo; set => spriteSetNo = value;}
 
     void Start()
     {
@@ -42,7 +45,9 @@ public class CursorManager : MonoBehaviour
 
     public void SetGrabState(bool isDragging)
     {
-        cursorImage.sprite = isDragging ? leftClickSprite : defaultSprite;
+        Cursor.visible = false;
+
+        cursorImage.sprite = isDragging ? leftClickSprite[spriteSetNo] : defaultSprite[spriteSetNo];
         
         // Instantly switch sizes depending on the state
         cursorRectTransform.sizeDelta = isDragging ? leftClickSize : normalSize;
