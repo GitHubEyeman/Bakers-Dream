@@ -386,11 +386,40 @@ public class IngrePrep : MonoBehaviour
         var sb = new StringBuilder();
         foreach (var kv in IngreList)
         {
-            sb.Append('{');
             sb.Append(kv.Key);
             sb.Append(' ');
             sb.Append(kv.Value);
-            sb.Append('}');
+
+            // Determine unit text by ingredient key
+            switch (kv.Key)
+            {
+                case "Flour":
+                case "Yeast":
+                case "Salt":
+                case "Sugar":
+                    sb.Append(" grams");
+                    break;
+
+                case "Water":
+                case "OliveOil":
+                case "Honey":
+                case "Milk":
+                    sb.Append(" ml");
+                    break;
+
+                case "Butter":
+                    sb.Append(" grams");
+                    break;
+
+                case "Eggs":
+                    sb.Append(" unit(s)");
+                    break;
+
+                default:
+                    // leave without unit for unknown keys
+                    break;
+            }
+
             sb.AppendLine();
         }
 
