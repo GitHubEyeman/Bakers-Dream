@@ -28,6 +28,10 @@ public class DoughKneadingDirectInput : MonoBehaviour
     // Mouse Tracking Variables
     private Vector2 mouseStartPos;
 
+    [Header("Flour Reference")]
+    [SerializeField] private FlourSprinkle FlourSprinkle;
+    [SerializeField] private float FlourUsageAmount = 20;
+
     void Start()
     {
         if (doughMesh == null)
@@ -35,7 +39,7 @@ public class DoughKneadingDirectInput : MonoBehaviour
             doughMesh = GetComponentInChildren<SkinnedMeshRenderer>();
         }
         targetMaterial = doughMesh.material;
-        ResetDoughState();
+        ResetDoughState(); 
     }
 
     void Update()
@@ -158,7 +162,7 @@ public class DoughKneadingDirectInput : MonoBehaviour
 
         float cycleReduction = 100f / totalCyclesRequired;
         currentIncompleteValue = Mathf.Clamp(currentIncompleteValue - cycleReduction, 0f, 100f);
-
+        //CalculateFlourModifier();
         if (currentIncompleteValue <= 0)
         {
             OnKneadingFinished();
@@ -241,5 +245,19 @@ public class DoughKneadingDirectInput : MonoBehaviour
         }
 
         targetMaterial.SetFloat("_BlendAmount", targetValue);
+    }
+
+    private void CalculateFlourModifier()
+    {
+        if (FlourSprinkle != null)
+        {
+            int flourMod;
+            if (FlourSprinkle.GetCurrentFlourAmount() < 20) { flourMod = 20; }
+            else if (FlourSprinkle.GetCurrentFlourAmount() < 40) { flourMod = 10; }
+            else { flourMod = 0; }
+            
+            FlourSprinkle.AddCurrentFlourAmount(-FlourUsageAmount);
+            currentIncompleteValue = currentIncompleteValue - flourMod;
+        }
     }
 }

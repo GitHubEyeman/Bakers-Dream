@@ -121,6 +121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoftwareCursorTracker
   CursorImageObject: {fileID: 2088349096727135020}
+  cursorOffset: {x: 15, y: -35}
   normalSize: {x: 32, y: 32}
   leftClickSize: {x: 32, y: 32}
   spriteSetNo: 0

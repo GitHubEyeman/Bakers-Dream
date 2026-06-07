@@ -9,6 +9,8 @@ public class CursorManager : MonoBehaviour
     [SerializeField] private GameObject CursorImageObject;
 
     [Header("Size Settings")]
+    [Tooltip("Adjusts the cursor image position relative to the actual mouse hotspot. (e.g., (-16, 16) to center a 32x32 sprite)")]
+    [SerializeField] private Vector2 cursorOffset = new Vector2(15f, -35f);
     // Set your desired width and height values here (e.g., 32x32 or 64x64)
     [SerializeField] private Vector2 normalSize = new Vector2(32f, 32f);
     [SerializeField] private Vector2 leftClickSize = new Vector2(32f, 32f); // Slightly smaller when squeezing dough
@@ -36,8 +38,8 @@ public class CursorManager : MonoBehaviour
         if (Mouse.current == null) return;
         
         // Match mouse coordinates smoothly
-        cursorRectTransform.position = Mouse.current.position.ReadValue();
-
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+        cursorRectTransform.position = mousePosition + cursorOffset;
 
         if (Mouse.current.leftButton.isPressed) SetGrabState(true);
         else SetGrabState(false);
