@@ -55,6 +55,10 @@ public class IngrePrep : MonoBehaviour
         Eggs,
     }
 
+    // New explicit mappings for cup and scoop measurements (in ml and grams respectively)
+    private static readonly int[] CupAmounts = { 500, 400, 300, 200, 100 }; // Full -> OneFifth
+    private static readonly int[] ScoopAmounts = { 250, 125, 80, 62, 50 }; // Full -> OneFifth
+
     public float CupMeasurement;
     public MouseType currentMouseType = MouseType.Normal;
     public ScoopMeasure currentScoop = ScoopMeasure.FullScoops;
@@ -70,27 +74,27 @@ public class IngrePrep : MonoBehaviour
             {
                 if (value == 1f)
                 {
-                    ShowTip("Cup measure set to 50ml");
+                    ShowTip("Cup measure set to 100ml");
                     currentCup = CupMeasure.OneFifthcups;
                 }
                 else if (value == 2f)
                 {
-                    ShowTip("Cup measure set to 100ml");
+                    ShowTip("Cup measure set to 200ml");
                     currentCup = CupMeasure.Quartercups;
                 }
                 else if (value == 3f)
                 {
-                    ShowTip("Cup measure set to 150ml");
+                    ShowTip("Cup measure set to 300ml");
                     currentCup = CupMeasure.OneThirdcups;
                 }
                 else if (value == 4f)
                 {
-                    ShowTip("Cup measure set to 200ml");
+                    ShowTip("Cup measure set to 400ml");
                     currentCup = CupMeasure.Halfcups;
                 }
                 else if (value == 5f)
                 {
-                    ShowTip("Cup measure set to 250ml");
+                    ShowTip("Cup measure set to 500ml");
                     currentCup = CupMeasure.Fullcups;
                 }
                 // Optionally update UI or do something with the new cupMeasure value
@@ -278,9 +282,9 @@ public class IngrePrep : MonoBehaviour
     public void SetIngreList()
     {
         // Adds or increments the selected ingredient in IngreList.
-        // Rules (per request):
-        // - Scoops: Flour, Yeast, Salt, Sugar  -> use currentScoop (use enum ordinal + 1 for now)
-        // - Cups: Water, OliveOil, Honey, Milk -> use currentCup  (use enum ordinal + 1 for now)
+        // Rules:
+        // - Scoops: Flour, Yeast, Salt, Sugar  -> use ScoopAmounts (grams)
+        // - Cups: Water, OliveOil, Honey, Milk -> use CupAmounts  (ml)
         // - Scale: Butter                         -> placeholder grams (100)
         // - Normal: Eggs                          -> 1 unit
         // - Whisk: not used
@@ -308,9 +312,9 @@ public class IngrePrep : MonoBehaviour
                     ShowTip($"{currentIngredient} must be added in Scoop mode");
                     return;
                 }
-                // Use enum index + 1 for a placeholder amount (Full=1, Half=2, etc. as requested)
-                amount = (int)currentScoop + 1;
-                ShowTip($"Measured {amount} scoop(s) of {key}");
+                // Use explicit grams mapping
+                amount = ScoopAmounts[(int)currentScoop];
+                ShowTip($"Measured {amount} grams of {key}");
                 break;
 
             case IngredientType.Water:
@@ -323,9 +327,9 @@ public class IngrePrep : MonoBehaviour
                     ShowTip($"{currentIngredient} must be added in Cup mode");
                     return;
                 }
-                // Use enum index + 1 for a placeholder amount (will replace with ml later)
-                amount = (int)currentCup + 1;
-                ShowTip($"Measured {amount} cup-measure(s) of {key}");
+                // Use explicit ml mapping
+                amount = CupAmounts[(int)currentCup];
+                ShowTip($"Measured {amount} ml of {key}");
                 break;
 
             case IngredientType.Butter:
