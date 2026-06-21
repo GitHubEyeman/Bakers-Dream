@@ -11,14 +11,12 @@ public class IngrePrep : MonoBehaviour
     [SerializeField] private TextMeshProUGUI IngreListText; // assign in Inspector
     [SerializeField] private TextMeshProUGUI TipsPrompt; // assign in Inspector - displays tips/messages
 
-    //Change MouseType
+    //Change MouseType - removed Whisk and Scale
     public enum MouseType
     {
         Normal,
-        Whisk,
         Scoop,
         Cup,
-        Scale,
     }
 
     // change ScoopMeasure
@@ -111,12 +109,6 @@ public class IngrePrep : MonoBehaviour
 
     }
 
-    public void WhiskMode()
-    {
-        currentMouseType = MouseType.Whisk;
-        ShowTip("Mouse type set to Whisk");
-    }
-
     public void ScoopMode()
     {
         currentMouseType = MouseType.Scoop;
@@ -133,12 +125,6 @@ public class IngrePrep : MonoBehaviour
     {
         currentMouseType = MouseType.Normal;
         ShowTip("Mouse type set to Normal");
-    }
-
-    public void ScaleMode()
-    {
-        currentMouseType = MouseType.Scale;
-        ShowTip("Mouse type set to Scale");
     }
 
     // Helper to validate enum index
@@ -241,13 +227,13 @@ public class IngrePrep : MonoBehaviour
 
     public void SetIngredientButter()
     {
-        if (currentMouseType == MouseType.Scale)
+        if (currentMouseType == MouseType.Normal)
         {
             currentIngredient = IngredientType.Butter;
             ShowTip("Ingredient set to: Butter");
         }
         else
-            ShowTip("Butter can only be set in Scale mode");
+            ShowTip("Butter can only be set in Normal mode");
     }
 
     public void SetIngredientMilk()
@@ -285,9 +271,7 @@ public class IngrePrep : MonoBehaviour
         // Rules:
         // - Scoops: Flour, Yeast, Salt, Sugar  -> use ScoopAmounts (grams)
         // - Cups: Water, OliveOil, Honey, Milk -> use CupAmounts  (ml)
-        // - Scale: Butter                         -> placeholder grams (100)
-        // - Normal: Eggs                          -> 1 unit
-        // - Whisk: not used
+        // - Normal: Butter, Eggs                -> 1 unit/block
         string key;
         int amount = 0;
 
@@ -333,15 +317,14 @@ public class IngrePrep : MonoBehaviour
                 break;
 
             case IngredientType.Butter:
-                // require Scale mode
-                if (currentMouseType != MouseType.Scale)
+                // require Normal mode; treat as one block
+                if (currentMouseType != MouseType.Normal)
                 {
-                    ShowTip("Butter must be added in Scale mode");
+                    ShowTip("Butter must be added in Normal mode");
                     return;
                 }
-                // Placeholder grams for now
-                amount = 100;
-                ShowTip($"Measured {amount} grams of {key}");
+                amount = 1; // one block
+                ShowTip($"Measured {amount} block(s) of {key}");
                 break;
 
             case IngredientType.Eggs:
@@ -413,7 +396,7 @@ public class IngrePrep : MonoBehaviour
                     break;
 
                 case "Butter":
-                    sb.Append(" grams");
+                    sb.Append(" block(s)");
                     break;
 
                 case "Eggs":
