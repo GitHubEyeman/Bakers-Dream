@@ -9,15 +9,14 @@ public class IngrePrep : MonoBehaviour
 {
     [SerializeField] private Slider CupRuler;
     [SerializeField] private TextMeshProUGUI IngreListText; // assign in Inspector
+    [SerializeField] private TextMeshProUGUI TipsPrompt; // assign in Inspector - displays tips/messages
 
-    //Change MouseType
+    //Change MouseType - removed Whisk and Scale
     public enum MouseType
     {
         Normal,
-        Whisk,
         Scoop,
         Cup,
-        Scale,
     }
 
     // change ScoopMeasure
@@ -54,6 +53,10 @@ public class IngrePrep : MonoBehaviour
         Eggs,
     }
 
+    // New explicit mappings for cup and scoop measurements (in ml and grams respectively)
+    private static readonly int[] CupAmounts = { 500, 400, 300, 200, 100 }; // Full -> OneFifth
+    private static readonly int[] ScoopAmounts = { 250, 125, 80, 62, 50 }; // Full -> OneFifth
+
     public float CupMeasurement;
     public MouseType currentMouseType = MouseType.Normal;
     public ScoopMeasure currentScoop = ScoopMeasure.FullScoops;
@@ -69,27 +72,27 @@ public class IngrePrep : MonoBehaviour
             {
                 if (value == 1f)
                 {
-                    print("Cup measure set to 50ml");
+                    ShowTip("Cup measure set to 100ml");
                     currentCup = CupMeasure.OneFifthcups;
                 }
                 else if (value == 2f)
                 {
-                    print("Cup measure set to 100ml");
+                    ShowTip("Cup measure set to 200ml");
                     currentCup = CupMeasure.Quartercups;
                 }
                 else if (value == 3f)
                 {
-                    print("Cup measure set to 150ml");
+                    ShowTip("Cup measure set to 300ml");
                     currentCup = CupMeasure.OneThirdcups;
                 }
                 else if (value == 4f)
                 {
-                    print("Cup measure set to 200ml");
+                    ShowTip("Cup measure set to 400ml");
                     currentCup = CupMeasure.Halfcups;
                 }
                 else if (value == 5f)
                 {
-                    print("Cup measure set to 250ml");
+                    ShowTip("Cup measure set to 500ml");
                     currentCup = CupMeasure.Fullcups;
                 }
                 // Optionally update UI or do something with the new cupMeasure value
@@ -106,34 +109,22 @@ public class IngrePrep : MonoBehaviour
 
     }
 
-    public void WhiskMode()
-    {
-        currentMouseType = MouseType.Whisk;
-        print("Mouse type set to Whisk");
-    }
-
     public void ScoopMode()
     {
         currentMouseType = MouseType.Scoop;
-        print("Mouse type set to Scoop");
+        ShowTip("Mouse type set to Scoop");
     }
 
     public void CupMode()
     {
         currentMouseType = MouseType.Cup;
-        print("Mouse type set to Cup");
+        ShowTip("Mouse type set to Cup");
     }
 
     public void NormalMode()
     {
         currentMouseType = MouseType.Normal;
-        print("Mouse type set to Normal");
-    }
-
-    public void ScaleMode()
-    {
-        currentMouseType = MouseType.Scale;
-        print("Mouse type set to Scale");
+        ShowTip("Mouse type set to Normal");
     }
 
     // Helper to validate enum index
@@ -148,12 +139,12 @@ public class IngrePrep : MonoBehaviour
     {
         if (!IsValidEnumIndex(typeof(ScoopMeasure), measure))
         {
-            print($"Invalid scoop measure index: {measure}");
+            ShowTip($"Invalid scoop measure index: {measure}");
             return;
         }
 
         currentScoop = (ScoopMeasure)measure;
-        print($"Scoop measure set to: {currentScoop}");
+        ShowTip($"Scoop measure set to: {currentScoop}");
     }
 
     // Ingredient setter: single validated method for UI buttons (pass 1..n; 0 is None)
@@ -162,10 +153,10 @@ public class IngrePrep : MonoBehaviour
         if (currentMouseType == MouseType.Cup)
         {
             currentIngredient = IngredientType.Water;
-            print("Ingredient set to: Water");
+            ShowTip("Ingredient set to: Water");
         }
         else
-            print("Water can only be set in Cup mode");
+            ShowTip("Water can only be set in Cup mode");
     }
 
     public void SetIngredientOliveOil()
@@ -173,10 +164,10 @@ public class IngrePrep : MonoBehaviour
         if (currentMouseType == MouseType.Cup)
         {
             currentIngredient = IngredientType.OliveOil;
-            print("Ingredient set to: OliveOil");
+            ShowTip("Ingredient set to: OliveOil");
         }
         else
-            print("Olive Oil can only be set in Cup mode");
+            ShowTip("Olive Oil can only be set in Cup mode");
     }
 
     public void SetIngredientFlour()
@@ -184,10 +175,10 @@ public class IngrePrep : MonoBehaviour
         if (currentMouseType == MouseType.Scoop)
         {
             currentIngredient = IngredientType.Flour;
-            print("Ingredient set to: Flour");
+            ShowTip("Ingredient set to: Flour");
         }
         else
-            print("Flour can only be set in Scoop mode");
+            ShowTip("Flour can only be set in Scoop mode");
     }
 
     public void SetIngredientYeast()
@@ -195,10 +186,10 @@ public class IngrePrep : MonoBehaviour
         if (currentMouseType == MouseType.Scoop)
         {
             currentIngredient = IngredientType.Yeast;
-            print("Ingredient set to: Yeast");
+            ShowTip("Ingredient set to: Yeast");
         }
         else
-            print("Yeast can only be set in Scoop mode");
+            ShowTip("Yeast can only be set in Scoop mode");
     }
 
     public void SetIngredientSalt()
@@ -206,10 +197,10 @@ public class IngrePrep : MonoBehaviour
         if (currentMouseType == MouseType.Scoop)
         {
             currentIngredient = IngredientType.Salt;
-            print("Ingredient set to: Salt");
+            ShowTip("Ingredient set to: Salt");
         }
         else
-            print("Salt can only be set in Scoop mode");
+            ShowTip("Salt can only be set in Scoop mode");
     }
 
     public void SetIngredientSugar()
@@ -217,10 +208,10 @@ public class IngrePrep : MonoBehaviour
         if (currentMouseType == MouseType.Scoop)
         {
             currentIngredient = IngredientType.Sugar;
-            print("Ingredient set to: Sugar");
+            ShowTip("Ingredient set to: Sugar");
         }
         else
-            print("Sugar can only be set in Scoop mode");
+            ShowTip("Sugar can only be set in Scoop mode");
     }
 
     public void SetIngredientHoney()
@@ -228,21 +219,21 @@ public class IngrePrep : MonoBehaviour
         if (currentMouseType == MouseType.Cup)
         {
             currentIngredient = IngredientType.Honey;
-            print("Ingredient set to: Honey");
+            ShowTip("Ingredient set to: Honey");
         }
         else
-            print("Honey can only be set in Cup mode");
+            ShowTip("Honey can only be set in Cup mode");
     }
 
     public void SetIngredientButter()
     {
-        if (currentMouseType == MouseType.Scale)
+        if (currentMouseType == MouseType.Normal)
         {
             currentIngredient = IngredientType.Butter;
-            print("Ingredient set to: Butter");
+            ShowTip("Ingredient set to: Butter");
         }
         else
-            print("Butter can only be set in Scale mode");
+            ShowTip("Butter can only be set in Normal mode");
     }
 
     public void SetIngredientMilk()
@@ -250,10 +241,10 @@ public class IngrePrep : MonoBehaviour
         if (currentMouseType == MouseType.Cup)
         {
             currentIngredient = IngredientType.Milk;
-            print("Ingredient set to: Milk");
+            ShowTip("Ingredient set to: Milk");
         }
         else
-            print("Milk can only be set in Cup mode");
+            ShowTip("Milk can only be set in Cup mode");
     }
 
     public void SetIngredientEggs()
@@ -261,10 +252,10 @@ public class IngrePrep : MonoBehaviour
         if (currentMouseType == MouseType.Normal)
         {
             currentIngredient = IngredientType.Eggs;
-            print("Ingredient set to: Eggs");
+            ShowTip("Ingredient set to: Eggs");
         }
         else
-            print("Eggs can only be set in Normal mode");
+            ShowTip("Eggs can only be set in Normal mode");
     }
 
     // Called by UI Button: adds current selection to the list and updates the TMP display
@@ -277,18 +268,16 @@ public class IngrePrep : MonoBehaviour
     public void SetIngreList()
     {
         // Adds or increments the selected ingredient in IngreList.
-        // Rules (per request):
-        // - Scoops: Flour, Yeast, Salt, Sugar  -> use currentScoop (use enum ordinal + 1 for now)
-        // - Cups: Water, OliveOil, Honey, Milk -> use currentCup  (use enum ordinal + 1 for now)
-        // - Scale: Butter                         -> placeholder grams (100)
-        // - Normal: Eggs                          -> 1 unit
-        // - Whisk: not used
+        // Rules:
+        // - Scoops: Flour, Yeast, Salt, Sugar  -> use ScoopAmounts (grams)
+        // - Cups: Water, OliveOil, Honey, Milk -> use CupAmounts  (ml)
+        // - Normal: Butter, Eggs                -> 1 unit/block
         string key;
         int amount = 0;
 
         if (currentIngredient == IngredientType.None)
         {
-            print("No ingredient selected");
+            ShowTip("No ingredient selected");
             return;
         }
 
@@ -304,12 +293,12 @@ public class IngrePrep : MonoBehaviour
                 // require Scoop mode
                 if (currentMouseType != MouseType.Scoop)
                 {
-                    print($"{currentIngredient} must be added in Scoop mode");
+                    ShowTip($"{currentIngredient} must be added in Scoop mode");
                     return;
                 }
-                // Use enum index + 1 for a placeholder amount (Full=1, Half=2, etc. as requested)
-                amount = (int)currentScoop + 1;
-                print($"Measured {amount} scoop(s) of {key}");
+                // Use explicit grams mapping
+                amount = ScoopAmounts[(int)currentScoop];
+                ShowTip($"Measured {amount} grams of {key}");
                 break;
 
             case IngredientType.Water:
@@ -319,39 +308,38 @@ public class IngrePrep : MonoBehaviour
                 // require Cup mode
                 if (currentMouseType != MouseType.Cup)
                 {
-                    print($"{currentIngredient} must be added in Cup mode");
+                    ShowTip($"{currentIngredient} must be added in Cup mode");
                     return;
                 }
-                // Use enum index + 1 for a placeholder amount (will replace with ml later)
-                amount = (int)currentCup + 1;
-                print($"Measured {amount} cup-measure(s) of {key}");
+                // Use explicit ml mapping
+                amount = CupAmounts[(int)currentCup];
+                ShowTip($"Measured {amount} ml of {key}");
                 break;
 
             case IngredientType.Butter:
-                // require Scale mode
-                if (currentMouseType != MouseType.Scale)
+                // require Normal mode; treat as one block
+                if (currentMouseType != MouseType.Normal)
                 {
-                    print("Butter must be added in Scale mode");
+                    ShowTip("Butter must be added in Normal mode");
                     return;
                 }
-                // Placeholder grams for now
-                amount = 100;
-                print($"Measured {amount} grams of {key}");
+                amount = 1; // one block
+                ShowTip($"Measured {amount} block(s) of {key}");
                 break;
 
             case IngredientType.Eggs:
                 // require Normal mode
                 if (currentMouseType != MouseType.Normal)
                 {
-                    print("Eggs must be added in Normal mode");
+                    ShowTip("Eggs must be added in Normal mode");
                     return;
                 }
                 amount = 1;
-                print($"Measured {amount} unit(s) of {key}");
+                ShowTip($"Measured {amount} unit(s) of {key}");
                 break;
 
             default:
-                print("Selected ingredient is not supported for adding");
+                ShowTip("Selected ingredient is not supported for adding");
                 return;
         }
 
@@ -359,12 +347,12 @@ public class IngrePrep : MonoBehaviour
         if (IngreList.ContainsKey(key))
         {
             IngreList[key] += amount;
-            print($"Updated {key} -> {IngreList[key]}");
+            ShowTip($"Updated {key} -> {IngreList[key]}");
         }
         else
         {
             IngreList.Add(key, amount);
-            print($"Added {key} -> {amount}");
+            ShowTip($"Added {key} -> {amount}");
         }
     }
 
@@ -373,7 +361,7 @@ public class IngrePrep : MonoBehaviour
     {
         if (IngreListText == null)
         {
-            print("IngreListText (TMP) not assigned.");
+            ShowTip("IngreListText (TMP) not assigned.");
             return;
         }
 
@@ -408,7 +396,7 @@ public class IngrePrep : MonoBehaviour
                     break;
 
                 case "Butter":
-                    sb.Append(" grams");
+                    sb.Append(" block(s)");
                     break;
 
                 case "Eggs":
@@ -430,6 +418,15 @@ public class IngrePrep : MonoBehaviour
     {
         IngreList.Clear();
         UpdateIngreListDisplay();
-        print("Ingredient list cleared");
+        ShowTip("Ingredient list cleared");
+    }
+
+    // Centralized UI tip writer. Falls back to Debug.Log if TipsPrompt not assigned.
+    private void ShowTip(string message)
+    {
+        if (TipsPrompt != null)
+            TipsPrompt.text = message;
+        else
+            Debug.Log(message);
     }
 }
