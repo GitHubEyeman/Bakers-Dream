@@ -10,10 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b99568b122ef0799db13e2747d49fc58, type: 3}
-  m_Name: New Recipe
+  m_Name: TestRecipe2
   m_EditorClassIdentifier: Assembly-CSharp::RecipeData
-  recipeName: htr5y4
-  id: 0
-  ingredient: {fileID: 0}
+  recipeName: PEE
+  id: 32134
+  ingredient: {fileID: 11400000, guid: e2b341792e488cc6bb5b40dc7d05e7c6, type: 2}
   itemPrefab: {fileID: 0}
-  reqIngredients: []
+  requiredIngredients:
+  - itemName: Flour
+    amount: 200
+  - itemName: Eggs
+    amount: 2

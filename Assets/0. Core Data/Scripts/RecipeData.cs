@@ -1,9 +1,16 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Recipe", menuName = "BakersDream/Recipe")]
 public class RecipeData : ScriptableObject
 {
+    [Serializable]
+    public struct IngredientPair
+    {
+        public string itemName;
+        public int amount;
+    }
     [Header("Basic Data")]
     public string recipeName;
     public int id;
@@ -13,8 +20,23 @@ public class RecipeData : ScriptableObject
     public GameObject itemPrefab;
 
     [Header("Required Ingredients")]
-    public List<IngredientsData> reqIngredients;
+    [SerializeField] private List<IngredientPair> requiredIngredients = new List<IngredientPair>();
+    public Dictionary<string, int> GetRecipeDictionary()
+    {
+        Dictionary<string, int> dict = new Dictionary<string, int>();
+        foreach (var pair in requiredIngredients)
+        {
+            if (!dict.ContainsKey(pair.itemName))
+            {
+                dict.Add(pair.itemName, pair.amount);
+            }
+        }
+        return dict;
+    }
+
+    
 
 
     
 }
+
