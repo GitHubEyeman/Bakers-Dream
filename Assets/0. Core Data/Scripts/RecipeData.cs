@@ -5,10 +5,25 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Recipe", menuName = "BakersDream/Recipe")]
 public class RecipeData : ScriptableObject
 {
+    public enum IngredientType
+    {
+        None,
+        Water,
+        OliveOil,
+        Flour,
+        Yeast,
+        Salt,
+        Sugar,
+        Honey,
+        Butter,
+        Milk,
+        Eggs,
+    }
+
     [Serializable]
     public struct IngredientPair
     {
-        public string itemName;
+        public IngredientType itemName;
         public int amount;
     }
     [Header("Basic Data")]
@@ -16,7 +31,7 @@ public class RecipeData : ScriptableObject
     public int id;
 
     [Header("The resulting object that the recipe will create")]
-    public IngredientsData ingredient;
+    public IngredientsData ingredientResult;
     public GameObject itemPrefab;
 
     [Header("Required Ingredients")]
@@ -26,9 +41,9 @@ public class RecipeData : ScriptableObject
         Dictionary<string, int> dict = new Dictionary<string, int>();
         foreach (var pair in requiredIngredients)
         {
-            if (!dict.ContainsKey(pair.itemName))
+            if (!dict.ContainsKey(pair.itemName.ToString()))
             {
-                dict.Add(pair.itemName, pair.amount);
+                dict.Add(pair.itemName.ToString(), pair.amount);
             }
         }
         return dict;

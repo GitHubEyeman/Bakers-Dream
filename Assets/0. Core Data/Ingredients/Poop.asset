@@ -15,4 +15,5 @@ MonoBehaviour:
   ingredientName: POOP
   id: 1
   isBasicIngredients: 0
-  itemPrefab: {fileID: 0}
+  itemPrefab: {fileID: 5200672566112894420, guid: 850cb9e579590d388a02d677127e565c, type: 3}
+  itemSprite: {fileID: 21300000, guid: fdc404e0ce4f0ce4698966dbc18fc9b6, type: 3}

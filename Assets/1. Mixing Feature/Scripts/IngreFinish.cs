@@ -15,6 +15,7 @@ public class IngreFinish : MonoBehaviour
 
     public void OnClickButton()
     {
+        SceneTransitioner.Instance.SkipInBetweenScene = true;
         bool recipeFound = false;
 
         // Loop through every recipe you assigned in the inspector
@@ -28,6 +29,8 @@ public class IngreFinish : MonoBehaviour
 
             if (isExactMatch)
             {
+                SaveManager.Instance.CurrentSave.IngredientsInventory.Add(recipe.ingredientResult.ingredientName);
+
                 // Debug out every item inside the successfully matched recipe
                 foreach (KeyValuePair<string, int> item in IngreList)
                 {
@@ -36,7 +39,7 @@ public class IngreFinish : MonoBehaviour
                 }
                 
                 recipeFound = true;
-                
+                SceneTransitioner.Instance.SkipInBetweenScene = false;
                 break; // Stop looking since we found the exact match
             }
         }

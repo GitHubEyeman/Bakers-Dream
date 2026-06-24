@@ -21,30 +21,12 @@ public class FlourSprinkle : MonoBehaviour
     private Material flourMaterial;
 
 
-
-
-    // [Header("Sprinkle Movement Animation Settings")]
-    
-    // public bool enableSprinkleAnimation = true;
-
-    // [Tooltip("The GameObject to be moved in 8 shape.")]
-    // [SerializeField] GameObject ParticleObject;
-
-    // [Tooltip("Speed of the movement.")]
-    // public float speed = 2.0f;
-
-    // [Tooltip("Width of the figure-8 loop (X-axis).")]
-    // public float width = 5.0f;
-
-    // [Tooltip("Height of the figure-8 loop (Z-axis). Use 'height' on Y-axis for 2D.")]
-    // public float height = 3.0f;
-
-    // [Header("Axis Orientation")]
-    // [Tooltip("True for a horizontal 3D plane (X and Z). False for a 2D plane (X and Y).")]
-    // public bool moveOnXZPlane = true;
-
-    // private Vector3 startPosition;
-    // private float timer = 0.0f;
+    [Header("Flour Bonus Settings")]
+    [SerializeField] private float flourConsumptionPerCycle = 10f; // how much flour is used per knead
+    [SerializeField] private float lowFlourThreshold = 20f;       // below this, no bonus
+    [SerializeField] private float mediumFlourThreshold = 40f;    // above this, better bonus
+    [SerializeField] private float lowBonusMultiplier = 0.15f;    // bonus as fraction of base reduction
+    [SerializeField] private float highBonusMultiplier = 0.30f;
 
 
 
@@ -131,29 +113,27 @@ public class FlourSprinkle : MonoBehaviour
     }
     public void AddCurrentFlourAmount(float value)
     {
-        currentFlourAmount = Mathf.Clamp(currentFlourAmount+value,0,1);
+        currentFlourAmount = Mathf.Clamp(currentFlourAmount + value, 0f, maxFlourCapacity);
+        UpdateVisualPile(); // ensure visual updates after changes
     }
 
-    //Sprinkle Movement Stuff
-    // private void PlaySprinkleAnim()
-    // {
-    //     // Advance time independently of the frame rate
-    //     timer += Time.deltaTime * speed;
+    public float GetFlourBonusAndConsume(float baseReduction)
+    {
+        if (currentFlourAmount < lowFlourThreshold)
+            return 0f;
 
-    //     // Parametric equations for a figure-8 curve
-    //     float x = Mathf.Sin(timer) * width;
-    //     float orthogonalAxis = Mathf.Sin(timer) * Mathf.Cos(timer) * height;
+        float bonusMultiplier;
+        if (currentFlourAmount >= mediumFlourThreshold)
+            bonusMultiplier = highBonusMultiplier;
+        else
+            bonusMultiplier = lowBonusMultiplier;
 
-    //     // Apply calculated values based on desired orientation
-    //     if (moveOnXZPlane)
-    //     {
-    //         // 3D Plane: Horizontal movement across X and Z
-    //         ParticleObject.transform.position = startPosition + new Vector3(x, 0.0f, orthogonalAxis);
-    //     }
-    //     else
-    //     {
-    //         // 2D Plane: Vertical movement across X and Y
-    //         ParticleObject.transform.position = startPosition + new Vector3(x, orthogonalAxis, 0.0f);
-    //     }
-    // }
+        float bonus = baseReduction * bonusMultiplier;
+
+        // Consume flour (but not below zero)
+        currentFlourAmount = Mathf.Max(currentFlourAmount - flourConsumptionPerCycle, 0f);
+        UpdateVisualPile();
+
+        return bonus;
+    }
 }

@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RecipeData
   recipeName: PEE
   id: 32134
-  ingredient: {fileID: 11400000, guid: e2b341792e488cc6bb5b40dc7d05e7c6, type: 2}
+  ingredientResult: {fileID: 11400000, guid: e2b341792e488cc6bb5b40dc7d05e7c6, type: 2}
   itemPrefab: {fileID: 0}
   requiredIngredients:
-  - itemName: Flour
+  - itemName: 3
     amount: 200
-  - itemName: Eggs
+  - itemName: 10
     amount: 2

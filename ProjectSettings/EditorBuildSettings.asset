@@ -11,6 +11,21 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/0. Audio Feature/TestingSceneAudio.unity
     guid: da64dad5f96dee99dac187ffaa022001
+  - enabled: 1
+    path: Assets/0. Transition Scene/TestSceneInbetween.unity
+    guid: 40bdfe6152224050d9260a15e4d39da7
+  - enabled: 1
+    path: Assets/Scenes/IngrediantsScene.unity
+    guid: 732efe014072d5a44a4c8926f941b6d9
+  - enabled: 1
+    path: Assets/0. Transition Scene/InBetweenScene.unity
+    guid: ab31c3054e222c5b884233442cd6341a
+  - enabled: 1
+    path: Assets/2. ScenesCompleted/1. Level 1/1. Mixing.unity
+    guid: a5ce7764cea8f35128e8f7ff253a35c4
+  - enabled: 1
+    path: Assets/2. ScenesCompleted/1. Level 1/2. Kneading.unity
+    guid: 19e9867ccb064de64890ce883ee07c73
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
