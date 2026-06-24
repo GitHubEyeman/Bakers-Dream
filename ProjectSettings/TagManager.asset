@@ -6,6 +6,7 @@ TagManager:
   tags:
   - topDough
   - botDough
+  - Oven
   layers:
   - Default
   - TransparentFX
