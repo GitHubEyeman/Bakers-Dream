@@ -16,4 +16,5 @@ public class IngredientsData : ScriptableObject
 
     [Header("Item Model")]
     public GameObject itemPrefab;
+    public Sprite itemSprite;
 }

@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3086a1236c0cecd6dafcdead4d88be1c, type: 3}
   m_Name: Test Ingredient 1
   m_EditorClassIdentifier: Assembly-CSharp::IngredientsData
-  ingredientName: sadasda
+  ingredientName: PEE
   id: 0
+  isBasicIngredients: 1
   itemPrefab: {fileID: 0}
+  itemSprite: {fileID: 0}

@@ -12,6 +12,15 @@ public class DoughKneadingDirectInput : MonoBehaviour
     [SerializeField] private int totalCyclesRequired = 5;
     [SerializeField] private float dragSensitivity = 3.0f;
 
+    [Header("Flour Reference")]
+    [SerializeField] private FlourSprinkle FlourSprinkle;
+    [SerializeField] private float FlourUsageAmount = 20;
+
+    // Public References
+    public int TotalCyclesRequired {get => totalCyclesRequired; set => totalCyclesRequired = value;}
+    public float DragSensitivity {get => dragSensitivity; set => dragSensitivity = value;}
+
+
     // BlendShape Index Mapping
     private const int INDEX_INCOMPLETE_DOUGH = 0;
     private const int INDEX_START_GRAB = 1;
@@ -28,9 +37,7 @@ public class DoughKneadingDirectInput : MonoBehaviour
     // Mouse Tracking Variables
     private Vector2 mouseStartPos;
 
-    [Header("Flour Reference")]
-    [SerializeField] private FlourSprinkle FlourSprinkle;
-    [SerializeField] private float FlourUsageAmount = 20;
+
 
     void Start()
     {
@@ -155,14 +162,56 @@ public class DoughKneadingDirectInput : MonoBehaviour
         }
     }
 
+    // private void CompleteKneadCycle()
+    // {
+    //     completedCycles++;
+    //     Debug.Log($"Knead Cycle Complete! Total: {completedCycles}/{totalCyclesRequired}");
+
+    //     float cycleReduction = 100f / totalCyclesRequired;
+    //     currentIncompleteValue = Mathf.Clamp(currentIncompleteValue - cycleReduction, 0f, 100f);
+    //     //CalculateFlourModifier();
+    //     if (currentIncompleteValue <= 0)
+    //     {
+    //         OnKneadingFinished();
+    //     }
+    //     else
+    //     {
+    //         ResetDoughState();
+    //     }
+    // }
+
     private void CompleteKneadCycle()
     {
         completedCycles++;
-        Debug.Log($"Knead Cycle Complete! Total: {completedCycles}/{totalCyclesRequired}");
+        
+        float baseReduction = 100f / totalCyclesRequired;
+        float bonusReduction = 0f;
 
-        float cycleReduction = 100f / totalCyclesRequired;
-        currentIncompleteValue = Mathf.Clamp(currentIncompleteValue - cycleReduction, 0f, 100f);
-        //CalculateFlourModifier();
+        if (FlourSprinkle != null)
+        {
+            bonusReduction = FlourSprinkle.GetFlourBonusAndConsume(baseReduction);
+        }
+
+        float totalReduction = baseReduction + bonusReduction;
+        currentIncompleteValue = Mathf.Clamp(currentIncompleteValue - totalReduction, 0f, 100f);
+
+        // Enhanced debug log showing the bonus and total reduction
+        if (bonusReduction > 0)
+        {
+            Debug.Log($"Knead Cycle Complete! Total: {completedCycles}/{totalCyclesRequired} | " +
+                    $"Base reduction: {baseReduction:F1}% | " +
+                    $"Flour bonus: +{bonusReduction:F1}% | " +
+                    $"Total reduction: {totalReduction:F1}% | " +
+                    $"Dough remaining: {currentIncompleteValue:F1}%");
+        }
+        else
+        {
+            Debug.Log($"Knead Cycle Complete! Total: {completedCycles}/{totalCyclesRequired} | " +
+                    $"Base reduction: {baseReduction:F1}% | " +
+                    $"No flour bonus | " +
+                    $"Dough remaining: {currentIncompleteValue:F1}%");
+        }
+
         if (currentIncompleteValue <= 0)
         {
             OnKneadingFinished();
@@ -172,7 +221,6 @@ public class DoughKneadingDirectInput : MonoBehaviour
             ResetDoughState();
         }
     }
-
     private void OnKneadingFinished()
     {
         doughMesh.SetBlendShapeWeight(INDEX_INCOMPLETE_DOUGH, 0f);
@@ -181,7 +229,7 @@ public class DoughKneadingDirectInput : MonoBehaviour
         doughMesh.SetBlendShapeWeight(INDEX_PUSH, 0f);
 
         //StartTextureBlend( 0.95f, 0.1f);
-        
+        SaveManager.Instance.CurrentSave.AddToInventory("Dough"); //TODO: Change this depending on recipe
         Debug.Log("Dough is perfectly kneaded!");
         this.enabled = false;
     }
@@ -247,17 +295,17 @@ public class DoughKneadingDirectInput : MonoBehaviour
         targetMaterial.SetFloat("_BlendAmount", targetValue);
     }
 
-    private void CalculateFlourModifier()
-    {
-        if (FlourSprinkle != null)
-        {
-            int flourMod;
-            if (FlourSprinkle.GetCurrentFlourAmount() < 20) { flourMod = 20; }
-            else if (FlourSprinkle.GetCurrentFlourAmount() < 40) { flourMod = 10; }
-            else { flourMod = 0; }
+    // private void CalculateFlourModifier()
+    // {
+    //     if (FlourSprinkle != null)
+    //     {
+    //         int flourMod;
+    //         if (FlourSprinkle.GetCurrentFlourAmount() < 20) { flourMod = 20; }
+    //         else if (FlourSprinkle.GetCurrentFlourAmount() < 40) { flourMod = 10; }
+    //         else { flourMod = 0; }
             
-            FlourSprinkle.AddCurrentFlourAmount(-FlourUsageAmount);
-            currentIncompleteValue = currentIncompleteValue - flourMod;
-        }
-    }
+    //         FlourSprinkle.AddCurrentFlourAmount(-FlourUsageAmount);
+    //         currentIncompleteValue = currentIncompleteValue - flourMod;
+    //     }
+    // }
 }
