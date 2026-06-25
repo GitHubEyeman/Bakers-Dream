@@ -18,6 +18,7 @@ public class RecipeData : ScriptableObject
         Butter,
         Milk,
         Eggs,
+        Dough,
     }
 
     [Serializable]

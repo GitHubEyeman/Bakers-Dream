@@ -44,26 +44,60 @@ public class IngredientSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, 
         rectTransform.anchoredPosition += eventData.delta / parentCanvas.scaleFactor;
     }
 
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        canvasGroup.alpha = 1.0f;
-        canvasGroup.blocksRaycasts = true;
+    // public void OnEndDrag(PointerEventData eventData)
+    // {
+    //     canvasGroup.alpha = 1.0f;
+    //     canvasGroup.blocksRaycasts = true;
 
-        Ray ray = Camera.main.ScreenPointToRay(eventData.position);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+    //     Ray ray = Camera.main.ScreenPointToRay(eventData.position);
+    //     if (Physics.Raycast(ray, out RaycastHit hit))
+    //     {
+    //         DropZone dropZone = hit.collider.GetComponent<DropZone>();
+    //         if (dropZone != null)
+    //         {
+    //             dropZone.RemoveItemFromHotbar(data.ingredientName);
+    //             dropZone.SpawnIngredient(data.itemPrefab);
+    //             Destroy(gameObject);   // Remove the dragged slot
+    //             return;                // Skip the return-to-panel code
+    //         }
+    //     }
+
+    //     // If not dropped on a valid zone, return it to its original position
+    //     transform.SetParent(originalParent, false);
+    //     rectTransform.anchoredPosition = originalPosition;
+    // }
+
+public void OnEndDrag(PointerEventData eventData)
+{
+    canvasGroup.alpha = 1.0f;
+    canvasGroup.blocksRaycasts = true;
+
+    Ray ray = Camera.main.ScreenPointToRay(eventData.position);
+    if (Physics.Raycast(ray, out RaycastHit hit))
+    {
+        // Check for OvenDropZone first
+        OvenDropZone ovenDropZone = hit.collider.GetComponent<OvenDropZone>();
+        if (ovenDropZone != null)
         {
-            DropZone dropZone = hit.collider.GetComponent<DropZone>();
-            if (dropZone != null)
-            {
-                dropZone.RemoveItemFromHotbar(data.ingredientName);
-                dropZone.SpawnIngredient(data.itemPrefab);
-                Destroy(gameObject);   // Remove the dragged slot
-                return;                // Skip the return-to-panel code
-            }
+            ovenDropZone.BakeItem(data, data.itemPrefab);
+            // The hotbar is rebuilt inside RemoveItemFromHotbar, so this slot is gone.
+            return;
         }
 
-        // If not dropped on a valid zone, return it to its original position
-        transform.SetParent(originalParent, false);
-        rectTransform.anchoredPosition = originalPosition;
+        // Fallback to regular DropZone
+        DropZone dropZone = hit.collider.GetComponent<DropZone>();
+        if (dropZone != null)
+        {
+            dropZone.RemoveItemFromHotbar(data.ingredientName);
+            dropZone.SpawnIngredient(data.itemPrefab);
+            Destroy(gameObject);
+            return;
+        }
     }
+
+    // Return to original position if dropped nowhere valid
+    transform.SetParent(originalParent, false);
+    rectTransform.anchoredPosition = originalPosition;
+}
+
 }

@@ -13,6 +13,7 @@ public class HotbarManager : MonoBehaviour
     private void Start()
     {
         // SaveManager.Instance.CurrentSave.ClearInventory();
+        // SaveManager.Instance.CurrentSave.AddToInventory("Dough"); //DEBUG DELETE WHEN DONE!
         // SaveManager.Instance.CurrentSave.AddToInventory("POOP"); //DEBUG DELETE WHEN DONE!
         // SaveManager.Instance.CurrentSave.AddToInventory("POOP");
         PopulateHotbar();

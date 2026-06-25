@@ -15,8 +15,11 @@ public class DropZone : MonoBehaviour
     [SerializeField] private float bounceHeight = 0.4f;
     [SerializeField] private float bounceDuration = 0.3f;
 
+    public ParticleSystem ImpactParticlePrefab => impactParticlePrefab;
+    public bool EnableCustomAnimationSettings => enableCustomAnimationSettings;
 
-    public void SpawnIngredient(GameObject prefab)
+
+    public virtual void SpawnIngredient(GameObject prefab)
     {
         
         if (prefab == null) return;
@@ -39,7 +42,7 @@ public class DropZone : MonoBehaviour
         hotbarManager.RemoveItemFromHotbar(itemName);
     }
 
-    private void SetAnimatorSettings(ItemDropAnimator animator, bool enable)
+    public void SetAnimatorSettings(ItemDropAnimator animator, bool enable)
     {
         if (enable)
         {
@@ -50,4 +53,6 @@ public class DropZone : MonoBehaviour
             animator.bounceDuration = bounceDuration;
         }
     }
+
+    
 }
