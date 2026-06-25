@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 
@@ -23,11 +24,13 @@ public class OvenUIController : MonoBehaviour
     [SerializeField] private Color doneColor = Color.green;
     [SerializeField] private Color burntColor = Color.red;
     
+    private bool panelVisible = false;
+
     private void Start()
     {
         if (ovenController == null)
         {
-            ovenController = FindObjectOfType<OvenController>();
+            ovenController = FindFirstObjectByType<OvenController>();
             if (ovenController == null)
             {
                 Debug.LogError("No OvenController found in scene!");
@@ -38,7 +41,6 @@ public class OvenUIController : MonoBehaviour
         // Subscribe to oven events
         ovenController.OnBakingProgress += UpdateProgress;
         ovenController.OnBakingComplete += OnBakingComplete;
-        ovenController.OnBakingBurnt += OnBakingBurnt;
         
         // Setup UI buttons
         if (startBakeButton != null)
@@ -59,10 +61,16 @@ public class OvenUIController : MonoBehaviour
     
     private void Update()
     {
-        // Toggle oven panel with O key
-        if (Input.GetKeyDown(KeyCode.O))
+        // Toggle oven panel with O key using new Input System
+        if (Keyboard.current != null && Keyboard.current.oKey.wasPressedThisFrame)
         {
             ToggleOvenPanel();
+        }
+        
+        // Update status in real-time
+        if (ovenController != null && statusText != null)
+        {
+            // Status is updated by the oven controller
         }
     }
     
@@ -70,7 +78,8 @@ public class OvenUIController : MonoBehaviour
     {
         if (ovenPanel != null)
         {
-            ovenPanel.SetActive(!ovenPanel.activeSelf);
+            panelVisible = !panelVisible;
+            ovenPanel.SetActive(panelVisible);
             UpdateUI();
         }
     }
@@ -79,11 +88,27 @@ public class OvenUIController : MonoBehaviour
     {
         if (ovenController == null) return;
         
-        // Update status text
+        // Update status text from oven
         if (statusText != null && ovenController.IsBaking)
         {
-            float timeLeft = ovenController.TotalBakeTime - ovenController.ElapsedTime;
-            statusText.text = $"Baking... {Mathf.Max(0, timeLeft):F1}s";
+            // Use TotalBakeTimeSeconds and ElapsedTime
+            float timeLeft = ovenController.TotalBakeTimeSeconds - ovenController.ElapsedTime;
+            float timeLeftMinutes = timeLeft / 60f; // Convert to minutes for display
+            
+            if (timeLeftMinutes >= 1f)
+            {
+                int minutes = Mathf.FloorToInt(timeLeftMinutes);
+                int seconds = Mathf.FloorToInt(timeLeft % 60);
+                statusText.text = $"Baking... {minutes}m {seconds}s";
+            }
+            else
+            {
+                statusText.text = $"Baking... {Mathf.CeilToInt(timeLeft)}s";
+            }
+        }
+        else if (statusText != null && ovenController.IsBakingCompleted)
+        {
+            statusText.text = "Baking complete!";
         }
         else if (statusText != null)
         {
@@ -107,7 +132,7 @@ public class OvenUIController : MonoBehaviour
         {
             if (progress >= 1f)
                 progressFillImage.color = doneColor;
-            else if (progress > 0.8f)
+            else if (progress > 0.7f)
                 progressFillImage.color = bakingColor;
             else
                 progressFillImage.color = Color.white;
@@ -116,30 +141,30 @@ public class OvenUIController : MonoBehaviour
         UpdateUI();
     }
     
-    private void OnBakingComplete()
+    private void OnBakingComplete(string result, float score)
     {
         if (progressText != null)
             progressText.text = "DONE!";
         if (statusText != null)
-            statusText.text = "Perfectly baked!";
+            statusText.text = $"Baking complete! Score: {score:F0}%";
         if (progressFillImage != null)
-            progressFillImage.color = doneColor;
-    }
-    
-    private void OnBakingBurnt()
-    {
-        if (progressText != null)
-            progressText.text = "BURNT!";
-        if (statusText != null)
-            statusText.text = "Burnt! Too long in oven!";
-        if (progressFillImage != null)
-            progressFillImage.color = burntColor;
+        {
+            if (result == "perfect")
+                progressFillImage.color = doneColor;
+            else if (result == "burnt")
+                progressFillImage.color = burntColor;
+            else
+                progressFillImage.color = bakingColor;
+        }
     }
     
     private void ClearOven()
     {
-        if (ovenController.IsBaking)
-            ovenController.StopBaking();
+        if (ovenController != null)
+        {
+            if (ovenController.IsBaking)
+                ovenController.StopBaking();
+        }
         
         // Reset progress
         if (progressSlider != null)
@@ -158,7 +183,6 @@ public class OvenUIController : MonoBehaviour
         {
             ovenController.OnBakingProgress -= UpdateProgress;
             ovenController.OnBakingComplete -= OnBakingComplete;
-            ovenController.OnBakingBurnt -= OnBakingBurnt;
         }
     }
 }

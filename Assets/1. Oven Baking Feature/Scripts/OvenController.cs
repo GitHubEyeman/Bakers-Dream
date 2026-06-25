@@ -14,11 +14,14 @@ public class OvenController : MonoBehaviour
     [SerializeField] private float defaultTemperature = 180f;
     [SerializeField] private float temperatureStep = 5f;
     
-    [Header("Timer Settings")]
-    [SerializeField] private float minBakeTime = 10f;
-    [SerializeField] private float maxBakeTime = 60f;
-    [SerializeField] private float defaultBakeTime = 30f;
-    [SerializeField] private float timeStep = 1f;
+    [Header("Timer Settings (Minutes in UI)")]
+    [SerializeField] private float minBakeTimeMinutes = 10f;
+    [SerializeField] private float maxBakeTimeMinutes = 60f;
+    [SerializeField] private float defaultBakeTimeMinutes = 30f;
+    [SerializeField] private float timeStepMinutes = 1f;
+    
+    [Header("Game Speed Settings")]
+    [SerializeField] private float secondsPerBakingMinute = 1f;
     
     [Header("UI References")]
     [SerializeField] private Slider temperatureSlider;
@@ -29,19 +32,29 @@ public class OvenController : MonoBehaviour
     [SerializeField] private GameObject ovenDoor;
     [SerializeField] private GameObject bakingTray;
     [SerializeField] private GameObject bakedItemPrefab;
+    [SerializeField] private GameObject burntItemPrefab; // Optional: burnt version
     
     [Header("Door Settings")]
-    [SerializeField] private float doorOpenAngle = -110f;
+    [SerializeField] private float doorOpenAngle = -100f;
     [SerializeField] private float doorCloseAngle = 0f;
     [SerializeField] private float doorSpeed = 3f;
     [SerializeField] private GameObject doorPivot;
     
     [Header("Baking Visuals")]
     [SerializeField] private Material doughMaterial;
-    [SerializeField] private Color rawColor = Color.white;
-    [SerializeField] private Color bakingColor = Color.yellow;
-    [SerializeField] private Color doneColor = new Color(0.85f, 0.65f, 0.13f);
-    [SerializeField] private Color burntColor = Color.black;
+    [SerializeField] private Color rawColor = new Color(0.96f, 0.90f, 0.83f);
+    [SerializeField] private Color bakingColor = new Color(1f, 0.84f, 0f);
+    [SerializeField] private Color perfectColor = new Color(0.83f, 0.63f, 0.08f);
+    [SerializeField] private Color overdoneColor = new Color(0.5f, 0.3f, 0.1f);
+    [SerializeField] private Color burntColor = new Color(0.1f, 0.1f, 0.1f);
+    [SerializeField] private Color underdoneColor = new Color(0.9f, 0.85f, 0.75f);
+    
+    [Header("Scoring")]
+    [SerializeField] private float perfectScore = 100f;
+    [SerializeField] private float goodScore = 75f;
+    [SerializeField] private float undercookedScore = 50f;
+    [SerializeField] private float overcookedScore = 40f;
+    [SerializeField] private float burntScore = 20f;
     
     [Header("Audio")]
     [SerializeField] private string ovenStartSFX = "ovenStart";
@@ -50,39 +63,63 @@ public class OvenController : MonoBehaviour
     [SerializeField] private string ovenBurntSFX = "ovenBurnt";
     
     [Header("Debug")]
-    [SerializeField] private bool debugMode = false;
+    [SerializeField] private bool debugMode = true;
     
     // Private Variables
     private float currentTemperature;
-    private float currentBakeTime;
-    private float elapsedTime = 0f;
+    private float currentBakeTimeMinutes;
+    private float currentBakeTimeSeconds;
+    private float elapsedSeconds = 0f;
     private bool isBaking = false;
     private bool isOvenOpen = false;
     private Coroutine bakingCoroutine;
     private Coroutine temperatureAnimationCoroutine;
     
-    // Door Animation Variables
     private bool isDoorAnimating = false;
     private Quaternion doorTargetRotation;
     
-    // Events
+    private RecipeData currentRecipe;
+    private bool bakingCompleted = false;
+    
+    // Recipe reference values
+    private float recipeMinTemp = 170f;
+    private float recipeMaxTemp = 190f;
+    private float recipeMinTimeMinutes = 25f;
+    private float recipeMaxTimeMinutes = 35f;
+    private float recipeIdealTemp = 180f;
+    private float recipeIdealTimeMinutes = 30f;
+    
     public event Action<float> OnBakingProgress;
-    public event Action OnBakingComplete;
-    public event Action OnBakingBurnt;
+    public event Action<string, float> OnBakingComplete;
     
     // Properties
     public bool IsBaking => isBaking;
     public float CurrentTemperature => currentTemperature;
-    public float ElapsedTime => elapsedTime;
-    public float TotalBakeTime => currentBakeTime;
+    public float ElapsedTime => elapsedSeconds;
+    public float TotalBakeTimeSeconds => currentBakeTimeSeconds;
+    public float TotalBakeTimeMinutes => currentBakeTimeMinutes;
+    public bool IsBakingCompleted => bakingCompleted;
     
     private void Start()
     {
-        // Initialize with default values
         currentTemperature = defaultTemperature;
-        currentBakeTime = defaultBakeTime;
+        currentBakeTimeMinutes = defaultBakeTimeMinutes;
+        currentBakeTimeSeconds = ConvertMinutesToSeconds(currentBakeTimeMinutes);
         
-        // Setup UI
+        SetupUI();
+        SetupDoor();
+        SetupDough();
+        
+        CheckForDoughFromGameManager();
+        CheckForRecipeFromGameManager();
+        
+        Debug.Log($"=== OVEN INITIALIZED ===");
+        Debug.Log($"Default time: {currentBakeTimeMinutes} min = {currentBakeTimeSeconds}s");
+        Debug.Log($"==========================");
+    }
+    
+    private void SetupUI()
+    {
         if (temperatureSlider != null)
         {
             temperatureSlider.minValue = minTemperature;
@@ -93,32 +130,24 @@ public class OvenController : MonoBehaviour
         
         if (timeSlider != null)
         {
-            timeSlider.minValue = minBakeTime;
-            timeSlider.maxValue = maxBakeTime;
-            timeSlider.value = currentBakeTime;
+            timeSlider.minValue = minBakeTimeMinutes;
+            timeSlider.maxValue = maxBakeTimeMinutes;
+            timeSlider.value = currentBakeTimeMinutes;
             timeSlider.onValueChanged.AddListener(OnTimeChanged);
         }
         
         UpdateDisplay();
         SetStatus("Ready to bake!");
-        
-        // Setup door pivot
+    }
+    
+    private void SetupDoor()
+    {
         if (doorPivot == null && ovenDoor != null)
         {
             doorPivot = ovenDoor.transform.Find("DoorPivot")?.gameObject;
-            if (doorPivot == null)
-            {
-                doorPivot = ovenDoor;
-            }
+            if (doorPivot == null) doorPivot = ovenDoor;
         }
         
-        // Set initial dough color
-        if (doughMaterial != null)
-        {
-            doughMaterial.color = rawColor;
-        }
-        
-        // Make sure door is closed
         if (doorPivot != null)
         {
             doorPivot.transform.localRotation = Quaternion.Euler(doorCloseAngle, 0, 0);
@@ -126,22 +155,22 @@ public class OvenController : MonoBehaviour
         isOvenOpen = false;
     }
     
+    private void SetupDough()
+    {
+        if (doughMaterial != null)
+        {
+            doughMaterial.color = rawColor;
+        }
+    }
+    
     private void Update()
     {
-        // Keyboard shortcuts using new Input System
         if (Keyboard.current != null)
         {
-            if (Keyboard.current.bKey.wasPressedThisFrame)
-            {
-                ToggleBaking();
-            }
-            if (Keyboard.current.oKey.wasPressedThisFrame)
-            {
-                ToggleOvenDoor();
-            }
+            if (Keyboard.current.bKey.wasPressedThisFrame) ToggleBaking();
+            if (Keyboard.current.oKey.wasPressedThisFrame) ToggleOvenDoor();
         }
         
-        // Handle door animation smoothly
         if (isDoorAnimating && doorPivot != null)
         {
             doorPivot.transform.localRotation = Quaternion.Slerp(
@@ -158,11 +187,114 @@ public class OvenController : MonoBehaviour
         }
     }
     
-    #region UI Event Handlers
+    private float ConvertMinutesToSeconds(float minutes)
+    {
+        return minutes * secondsPerBakingMinute;
+    }
+    
+    private float ConvertSecondsToMinutes(float seconds)
+    {
+        return seconds / secondsPerBakingMinute;
+    }
+    
+    private void CheckForDoughFromGameManager()
+    {
+        if (GameManager.Instance != null && GameManager.Instance.hasDoughReady)
+        {
+            GameObject dough = GameManager.Instance.GetDough();
+            if (dough != null)
+            {
+                PlaceDoughInOven(dough);
+                SetStatus("Dough received from kneading!");
+                
+                if (doughMaterial != null)
+                {
+                    float quality = GameManager.Instance.doughQuality;
+                    Color startColor = Color.Lerp(rawColor, bakingColor, quality * 0.3f);
+                    doughMaterial.color = startColor;
+                    Debug.Log($"Dough placed with quality: {quality:F2}");
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("No dough from GameManager. Using default dough.");
+        }
+    }
+    
+    private void CheckForRecipeFromGameManager()
+    {
+        if (GameManager.Instance != null && !string.IsNullOrEmpty(GameManager.Instance.currentRecipeName))
+        {
+            string recipeName = GameManager.Instance.currentRecipeName;
+            LoadRecipe(recipeName);
+        }
+        else
+        {
+            Debug.Log("No recipe from GameManager. Using default recipe values.");
+            // Set default recipe values for testing
+            recipeMinTemp = 170f;
+            recipeMaxTemp = 190f;
+            recipeIdealTemp = 180f;
+            recipeMinTimeMinutes = 25f;
+            recipeMaxTimeMinutes = 35f;
+            recipeIdealTimeMinutes = 30f;
+        }
+    }
+    
+    public void LoadRecipe(string recipeName)
+    {
+        RecipeData[] allRecipes = Resources.LoadAll<RecipeData>("");
+        foreach (RecipeData recipe in allRecipes)
+        {
+            if (recipe.recipeName == recipeName)
+            {
+                currentRecipe = recipe;
+                SetOvenFromRecipe(recipe);
+                SetStatus($"Recipe loaded: {recipeName}");
+                Debug.Log($"Recipe loaded: {recipeName}");
+                return;
+            }
+        }
+        
+        Debug.LogWarning($"Recipe not found: {recipeName}");
+    }
+    
+    public void SetOvenFromRecipe(RecipeData recipe)
+    {
+        OvenRecipeData ovenRecipe = recipe as OvenRecipeData;
+        if (ovenRecipe != null)
+        {
+            // Store recipe values
+            recipeMinTemp = ovenRecipe.minTemperature;
+            recipeMaxTemp = ovenRecipe.maxTemperature;
+            recipeIdealTemp = (ovenRecipe.minTemperature + ovenRecipe.maxTemperature) / 2f;
+            recipeMinTimeMinutes = ovenRecipe.minTimer;
+            recipeMaxTimeMinutes = ovenRecipe.maxTimer;
+            recipeIdealTimeMinutes = (ovenRecipe.minTimer + ovenRecipe.maxTimer) / 2f;
+            
+            // Set oven to ideal recipe values
+            currentTemperature = recipeIdealTemp;
+            currentBakeTimeMinutes = recipeIdealTimeMinutes;
+            currentBakeTimeSeconds = ConvertMinutesToSeconds(currentBakeTimeMinutes);
+            
+            // Update UI
+            if (temperatureSlider != null) temperatureSlider.value = currentTemperature;
+            if (timeSlider != null) timeSlider.value = currentBakeTimeMinutes;
+            
+            UpdateDisplay();
+            
+            Debug.Log($"=== RECIPE LOADED ===");
+            Debug.Log($"Ideal Temp: {recipeIdealTemp}°C (Range: {recipeMinTemp}°C - {recipeMaxTemp}°C)");
+            Debug.Log($"Ideal Time: {recipeIdealTimeMinutes} min (Range: {recipeMinTimeMinutes} - {recipeMaxTimeMinutes} min)");
+            Debug.Log($"Oven set to: {currentTemperature}°C, {currentBakeTimeMinutes} min");
+            Debug.Log($"====================");
+        }
+    }
     
     public void OnTemperatureChanged(float value)
     {
-        if (isBaking) return; // Can't change temperature while baking
+        if (isBaking) return;
         currentTemperature = Mathf.Round(value / temperatureStep) * temperatureStep;
         UpdateDisplay();
         if (debugMode) Debug.Log($"Temperature set to: {currentTemperature}°C");
@@ -170,26 +302,17 @@ public class OvenController : MonoBehaviour
     
     public void OnTimeChanged(float value)
     {
-        if (isBaking) return; // Can't change time while baking
-        currentBakeTime = Mathf.Round(value / timeStep) * timeStep;
+        if (isBaking) return;
+        currentBakeTimeMinutes = Mathf.Round(value / timeStepMinutes) * timeStepMinutes;
+        currentBakeTimeSeconds = ConvertMinutesToSeconds(currentBakeTimeMinutes);
         UpdateDisplay();
-        if (debugMode) Debug.Log($"Time set to: {currentBakeTime} seconds");
+        Debug.Log($"Time set to: {currentBakeTimeMinutes} minutes ({currentBakeTimeSeconds}s)");
     }
-    
-    #endregion
-    
-    #region Public Methods
     
     public void ToggleBaking()
     {
-        if (!isBaking)
-        {
-            StartBaking();
-        }
-        else
-        {
-            StopBaking();
-        }
+        if (!isBaking) StartBaking();
+        else StopBaking();
     }
     
     public void StartBaking()
@@ -201,42 +324,34 @@ public class OvenController : MonoBehaviour
             return;
         }
         
-        // Reset elapsed time
-        elapsedTime = 0f;
+        elapsedSeconds = 0f;
         isBaking = true;
+        bakingCompleted = false;
         
-        // Play sound
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlaySFX(ovenStartSFX);
         
-        // Start baking coroutine
-        if (bakingCoroutine != null)
-            StopCoroutine(bakingCoroutine);
+        if (bakingCoroutine != null) StopCoroutine(bakingCoroutine);
         bakingCoroutine = StartCoroutine(BakingProcess());
         
-        SetStatus("Baking...");
-        if (debugMode) Debug.Log("Baking started!");
+        SetStatus($"Baking... ({currentBakeTimeMinutes} min)");
         
-        // Animate temperature color
-        if (temperatureAnimationCoroutine != null)
-            StopCoroutine(temperatureAnimationCoroutine);
+        Debug.Log($"=== BAKING STARTED ===");
+        Debug.Log($"Temp: {currentTemperature}°C (Recipe: {recipeIdealTemp}°C)");
+        Debug.Log($"Time: {currentBakeTimeMinutes} min (Recipe: {recipeIdealTimeMinutes} min)");
+        Debug.Log($"=====================");
+        
+        if (temperatureAnimationCoroutine != null) StopCoroutine(temperatureAnimationCoroutine);
         temperatureAnimationCoroutine = StartCoroutine(AnimateTemperature());
     }
     
     public void StopBaking()
     {
         if (!isBaking) return;
-        
         isBaking = false;
-        
-        if (bakingCoroutine != null)
-        {
-            StopCoroutine(bakingCoroutine);
-            bakingCoroutine = null;
-        }
-        
+        if (bakingCoroutine != null) StopCoroutine(bakingCoroutine);
         SetStatus("Baking stopped!");
-        if (debugMode) Debug.Log("Baking stopped!");
+        Debug.Log($"=== BAKING STOPPED at {elapsedSeconds:F1}s ===");
     }
     
     public void ToggleOvenDoor()
@@ -249,12 +364,7 @@ public class OvenController : MonoBehaviour
         }
         
         isOvenOpen = !isOvenOpen;
-        
-        doorTargetRotation = Quaternion.Euler(
-            isOvenOpen ? doorOpenAngle : doorCloseAngle,
-            0,
-            0
-        );
+        doorTargetRotation = Quaternion.Euler(isOvenOpen ? doorOpenAngle : doorCloseAngle, 0, 0);
         isDoorAnimating = true;
         
         SetStatus(isOvenOpen ? "Oven door open" : "Oven door closed");
@@ -271,62 +381,76 @@ public class OvenController : MonoBehaviour
         
         if (bakingTray != null)
         {
-            // Clear previous dough
             foreach (Transform child in bakingTray.transform)
             {
                 Destroy(child.gameObject);
             }
             
-            // Place dough on tray
             dough.transform.SetParent(bakingTray.transform);
             dough.transform.localPosition = Vector3.zero;
             dough.transform.localRotation = Quaternion.identity;
+            dough.transform.localScale = new Vector3(0.45f, 0.35f, 0.45f);
             
             SetStatus("Dough placed in oven!");
             if (debugMode) Debug.Log("Dough placed in oven");
         }
     }
     
-    #endregion
-    
-    #region Baking Coroutine
+    // ============================================
+    // BAKING COROUTINE - ACCURATE SYSTEM
+    // ============================================
     
     private IEnumerator BakingProcess()
     {
-        float progress = 0f;
+        // Calculate how long this bake should take
         float temperatureFactor = (currentTemperature - minTemperature) / (maxTemperature - minTemperature);
-        float actualBakeTime = currentBakeTime / (1 + temperatureFactor * 0.5f);
-        float burnThreshold = actualBakeTime * 1.2f;
+        float adjustedTimeSeconds = currentBakeTimeSeconds / (1 + temperatureFactor * 0.5f);
         
-        while (elapsedTime < burnThreshold && isBaking)
+        // Convert recipe times to seconds
+        float recipeMinSeconds = ConvertMinutesToSeconds(recipeMinTimeMinutes);
+        float recipeMaxSeconds = ConvertMinutesToSeconds(recipeMaxTimeMinutes);
+        float recipeIdealSeconds = ConvertMinutesToSeconds(recipeIdealTimeMinutes);
+        
+        // Track progress
+        float progress = 0f;
+        
+        Debug.Log($"=== BAKING CALCULATIONS ===");
+        Debug.Log($"Your Temp: {currentTemperature}°C (Recipe: {recipeIdealTemp}°C)");
+        Debug.Log($"Your Time: {currentBakeTimeMinutes} min (Recipe: {recipeIdealTimeMinutes} min)");
+        Debug.Log($"Adjusted time: {adjustedTimeSeconds:F1}s");
+        Debug.Log($"Recipe range: {recipeMinSeconds:F1}s - {recipeMaxSeconds:F1}s");
+        Debug.Log($"===========================");
+        
+        // ============================================
+        // BAKING LOOP
+        // ============================================
+        
+        while (elapsedSeconds < adjustedTimeSeconds && isBaking)
         {
-            elapsedTime += Time.deltaTime;
-            progress = Mathf.Clamp01(elapsedTime / actualBakeTime);
+            elapsedSeconds += Time.deltaTime;
+            progress = elapsedSeconds / adjustedTimeSeconds;
             
-            UpdateBakingVisuals(progress);
+            // Update visuals based on progress
+            UpdateBakingVisuals(progress, elapsedSeconds, adjustedTimeSeconds);
             OnBakingProgress?.Invoke(progress);
             
-            int timeLeft = Mathf.CeilToInt(actualBakeTime - elapsedTime);
-            if (timeLeft > 0)
-            {
-                SetStatus($"Baking... {timeLeft}s remaining");
-            }
-            else if (elapsedTime < burnThreshold)
-            {
-                SetStatus("DONE! Take it out!");
-                if (elapsedTime - Time.deltaTime < actualBakeTime)
-                {
-                    if (AudioManager.Instance != null)
-                        AudioManager.Instance.PlaySFX(ovenDoneSFX);
-                }
-            }
+            // Update status with time remaining
+            float timeLeftSeconds = adjustedTimeSeconds - elapsedSeconds;
+            float timeLeftMinutes = ConvertSecondsToMinutes(timeLeftSeconds);
             
+            int minutes = Mathf.FloorToInt(timeLeftMinutes);
+            int seconds = Mathf.FloorToInt(timeLeftSeconds % 60);
+            SetStatus($"Baking... {minutes}m {seconds}s remaining");
+            
+            // Update time display
             if (timeDisplay != null)
             {
-                timeDisplay.text = $"{Mathf.Max(0, actualBakeTime - elapsedTime):F1}s";
+                float remainingMinutes = ConvertSecondsToMinutes(timeLeftSeconds);
+                timeDisplay.text = $"{remainingMinutes:F1}m";
             }
             
-            if (Mathf.FloorToInt(elapsedTime) % 2 == 0 && elapsedTime > 0)
+            // Tick sound every 2 seconds
+            if (Mathf.FloorToInt(elapsedSeconds) % 2 == 0 && elapsedSeconds > 0)
             {
                 if (AudioManager.Instance != null)
                     AudioManager.Instance.PlaySFX(ovenTickSFX, 0.3f);
@@ -335,58 +459,221 @@ public class OvenController : MonoBehaviour
             yield return null;
         }
         
+        // ============================================
+        // BAKING COMPLETE - Determine Result
+        // ============================================
+        
         if (isBaking)
         {
             isBaking = false;
+            bakingCompleted = true;
             
-            if (elapsedTime >= burnThreshold)
-            {
-                SetStatus("BURNT! Too long in the oven!");
-                if (AudioManager.Instance != null)
-                    AudioManager.Instance.PlaySFX(ovenBurntSFX);
-                OnBakingBurnt?.Invoke();
-                UpdateBakingVisuals(1.5f);
-                if (debugMode) Debug.Log("Bread burnt!");
-            }
-            else if (progress >= 1f)
-            {
-                SetStatus("Perfectly baked!");
-                OnBakingComplete?.Invoke();
-                UpdateBakingVisuals(1f);
-                
-                if (bakedItemPrefab != null && bakingTray != null)
-                {
-                    GameObject bakedItem = Instantiate(bakedItemPrefab, bakingTray.transform.position, Quaternion.identity);
-                    bakedItem.transform.SetParent(bakingTray.transform);
-                    bakedItem.transform.localPosition = Vector3.zero;
-                }
-                
-                if (debugMode) Debug.Log("Baking complete!");
-            }
+            // Determine the result based on temperature and time
+            string result = DetermineBakeResult();
+            float score = CalculateScore(result);
+            
+            // Play appropriate sound
+            if (result == "burnt" && AudioManager.Instance != null)
+                AudioManager.Instance.PlaySFX(ovenBurntSFX);
+            else if (AudioManager.Instance != null)
+                AudioManager.Instance.PlaySFX(ovenDoneSFX);
+            
+            // Set status
+            string statusMessage = GetResultMessage(result, score);
+            SetStatus(statusMessage);
+            
+            // Update visuals
+            UpdateFinalVisuals(result);
+            
+            // Spawn baked item
+            SpawnBakedItem(result);
+            
+            // Save result
+            SaveBakeResult(result, score);
+            
+            // Fire event
+            OnBakingComplete?.Invoke(result, score);
+            
+            Debug.Log($"=== BAKING COMPLETE ===");
+            Debug.Log($"Result: {result}");
+            Debug.Log($"Score: {score:F0}%");
+            Debug.Log($"Your Temp: {currentTemperature}°C (Recipe: {recipeIdealTemp}°C)");
+            Debug.Log($"Your Time: {currentBakeTimeMinutes} min (Recipe: {recipeIdealTimeMinutes} min)");
+            Debug.Log($"========================");
         }
         
         bakingCoroutine = null;
         temperatureAnimationCoroutine = null;
     }
     
-    #endregion
+    // ============================================
+    // RESULT DETERMINATION
+    // ============================================
     
-    #region Visual Updates
+    private string DetermineBakeResult()
+    {
+        // Check temperature first
+        bool tempTooLow = currentTemperature < recipeMinTemp;
+        bool tempTooHigh = currentTemperature > recipeMaxTemp;
+        bool tempPerfect = !tempTooLow && !tempTooHigh;
+        
+        // Check time
+        bool timeTooShort = currentBakeTimeMinutes < recipeMinTimeMinutes;
+        bool timeTooLong = currentBakeTimeMinutes > recipeMaxTimeMinutes;
+        bool timePerfect = !timeTooShort && !timeTooLong;
+        
+        // Determine result
+        if (tempPerfect && timePerfect)
+        {
+            return "perfect";
+        }
+        else if (tempPerfect && timeTooLong)
+        {
+            // Perfect temp but too long = OVERCOOKED
+            float overage = currentBakeTimeMinutes - recipeMaxTimeMinutes;
+            if (overage > 10f) return "burnt";
+            return "overcooked";
+        }
+        else if (tempPerfect && timeTooShort)
+        {
+            // Perfect temp but too short = UNDERCOOKED
+            return "undercooked";
+        }
+        else if (tempTooHigh && timePerfect)
+        {
+            // Too hot but correct time = OVERCOOKED
+            float overage = currentTemperature - recipeMaxTemp;
+            if (overage > 30f) return "burnt";
+            return "overcooked";
+        }
+        else if (tempTooHigh && timeTooLong)
+        {
+            // Too hot AND too long = BURNT
+            return "burnt";
+        }
+        else if (tempTooHigh && timeTooShort)
+        {
+            // Too hot but too short = OVERCOOKED
+            return "overcooked";
+        }
+        else if (tempTooLow && timePerfect)
+        {
+            // Too cold but correct time = UNDERCOOKED
+            return "undercooked";
+        }
+        else if (tempTooLow && timeTooShort)
+        {
+            // Too cold AND too short = UNDERCOOKED
+            return "undercooked";
+        }
+        else if (tempTooLow && timeTooLong)
+        {
+            // Too cold but too long = AVERAGE (might still cook through)
+            return "average";
+        }
+        else
+        {
+            return "average";
+        }
+    }
     
-    private void UpdateBakingVisuals(float progress)
+    private float CalculateScore(string result)
+    {
+        float baseScore = 0f;
+        float penalty = 0f;
+        
+        switch (result)
+        {
+            case "perfect":
+                baseScore = perfectScore;
+                break;
+            case "average":
+                baseScore = goodScore;
+                break;
+            case "undercooked":
+                baseScore = undercookedScore;
+                break;
+            case "overcooked":
+                baseScore = overcookedScore;
+                break;
+            case "burnt":
+                baseScore = burntScore;
+                break;
+            default:
+                baseScore = 50f;
+                break;
+        }
+        
+        // Calculate penalties for how far off the player was
+        float tempDiff = Mathf.Abs(currentTemperature - recipeIdealTemp);
+        float tempPenalty = tempDiff / 50f * 20f; // Up to 20% penalty
+        
+        float timeDiff = Mathf.Abs(currentBakeTimeMinutes - recipeIdealTimeMinutes);
+        float timePenalty = timeDiff / 30f * 20f; // Up to 20% penalty
+        
+        // Apply penalties
+        float finalScore = baseScore - tempPenalty - timePenalty;
+        finalScore = Mathf.Clamp(finalScore, 0f, 100f);
+        
+        return finalScore;
+    }
+    
+    private string GetResultMessage(string result, float score)
+    {
+        switch (result)
+        {
+            case "perfect":
+                return $"🌟 Perfect bake! Score: {score:F0}%";
+            case "average":
+                return $"👍 Good bake! Score: {score:F0}%";
+            case "undercooked":
+                return $"❄️ Undercooked! Need more time or heat. Score: {score:F0}%";
+            case "overcooked":
+                return $"🔥 Overcooked! Too hot or too long. Score: {score:F0}%";
+            case "burnt":
+                return $"💀 Burnt! Way too hot or too long. Score: {score:F0}%";
+            default:
+                return $"Baking complete! Score: {score:F0}%";
+        }
+    }
+    
+    // ============================================
+    // VISUAL UPDATES
+    // ============================================
+    
+    private void UpdateBakingVisuals(float progress, float elapsed, float total)
     {
         if (doughMaterial == null) return;
         
+        // Determine if the player is on the right track
+        float timeRatio = elapsed / total;
+        float tempRatio = (currentTemperature - minTemperature) / (maxTemperature - minTemperature);
+        
         Color targetColor;
-        if (progress >= 1.2f)
+        
+        // Check if temperature is way off
+        bool tempTooHigh = currentTemperature > recipeMaxTemp + 20f;
+        bool tempTooLow = currentTemperature < recipeMinTemp - 20f;
+        
+        if (tempTooHigh)
         {
-            targetColor = burntColor;
+            // Dough getting burnt
+            targetColor = Color.Lerp(bakingColor, burntColor, timeRatio);
         }
-        else if (progress >= 0.9f)
+        else if (tempTooLow)
         {
-            targetColor = doneColor;
+            // Dough not cooking properly
+            targetColor = Color.Lerp(rawColor, underdoneColor, timeRatio * 0.5f);
         }
-        else if (progress >= 0.3f)
+        else if (timeRatio >= 1f)
+        {
+            targetColor = perfectColor;
+        }
+        else if (timeRatio >= 0.7f)
+        {
+            targetColor = Color.Lerp(bakingColor, perfectColor, (timeRatio - 0.7f) / 0.3f);
+        }
+        else if (timeRatio >= 0.3f)
         {
             targetColor = bakingColor;
         }
@@ -398,6 +685,55 @@ public class OvenController : MonoBehaviour
         doughMaterial.color = Color.Lerp(doughMaterial.color, targetColor, Time.deltaTime * 2f);
     }
     
+    private void UpdateFinalVisuals(string result)
+    {
+        if (doughMaterial == null) return;
+        
+        switch (result)
+        {
+            case "perfect":
+                doughMaterial.color = perfectColor;
+                break;
+            case "undercooked":
+                doughMaterial.color = underdoneColor;
+                break;
+            case "overcooked":
+                doughMaterial.color = overdoneColor;
+                break;
+            case "burnt":
+                doughMaterial.color = burntColor;
+                break;
+            default:
+                doughMaterial.color = perfectColor;
+                break;
+        }
+    }
+    
+    private void SpawnBakedItem(string result)
+    {
+        if (bakingTray == null) return;
+        
+        GameObject itemToSpawn = null;
+        
+        // Determine which prefab to spawn
+        if (result == "burnt" && burntItemPrefab != null)
+        {
+            itemToSpawn = burntItemPrefab;
+        }
+        else if (bakedItemPrefab != null)
+        {
+            itemToSpawn = bakedItemPrefab;
+        }
+        
+        if (itemToSpawn != null)
+        {
+            GameObject bakedItem = Instantiate(itemToSpawn, bakingTray.transform.position, Quaternion.identity);
+            bakedItem.transform.SetParent(bakingTray.transform);
+            bakedItem.transform.localPosition = Vector3.zero;
+            bakedItem.transform.localScale = new Vector3(0.5f, 0.4f, 0.5f);
+        }
+    }
+    
     private IEnumerator AnimateTemperature()
     {
         float targetTemp = currentTemperature;
@@ -407,96 +743,67 @@ public class OvenController : MonoBehaviour
         {
             currentDisplayTemp = Mathf.Lerp(currentDisplayTemp, targetTemp, Time.deltaTime * 3f);
             if (temperatureDisplay != null)
-            {
                 temperatureDisplay.text = $"{Mathf.RoundToInt(currentDisplayTemp)}°C";
-            }
             yield return null;
         }
         
         if (temperatureDisplay != null)
-        {
             temperatureDisplay.text = $"{Mathf.RoundToInt(currentTemperature)}°C";
-        }
     }
     
-    #endregion
-    
-    #region UI Updates
+    private void SaveBakeResult(string result, float score, GameObject bakedItemObj = null)
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.SetBakingResult(result, score, bakedItemObj);
+        }
+    }
     
     private void UpdateDisplay()
     {
         if (temperatureDisplay != null)
-        {
             temperatureDisplay.text = $"{Mathf.RoundToInt(currentTemperature)}°C";
-        }
         
         if (timeDisplay != null)
         {
-            timeDisplay.text = $"{Mathf.RoundToInt(currentBakeTime)}s";
+            if (currentBakeTimeMinutes % 1 == 0)
+                timeDisplay.text = $"{Mathf.RoundToInt(currentBakeTimeMinutes)}m";
+            else
+                timeDisplay.text = $"{currentBakeTimeMinutes:F1}m";
         }
     }
     
     private void SetStatus(string message)
     {
         if (statusDisplay != null)
-        {
             statusDisplay.text = message;
-        }
-        if (debugMode) Debug.Log($"Oven Status: {message}");
+        if (debugMode) Debug.Log($"Status: {message}");
     }
-    
-    #endregion
-    
-    #region Recipe Integration
-    
-    public void SetOvenFromRecipe(RecipeData recipe)
-    {
-        OvenRecipeData ovenRecipe = recipe as OvenRecipeData;
-        if (ovenRecipe != null)
-        {
-            float targetTemp = (ovenRecipe.minTimer + ovenRecipe.maxTimer) / 2f;
-            targetTemp = Mathf.Clamp(targetTemp, minTemperature, maxTemperature);
-            currentTemperature = Mathf.Round(targetTemp / temperatureStep) * temperatureStep;
-            
-            float targetTime = (ovenRecipe.minTimer + ovenRecipe.maxTimer) / 2f;
-            targetTime = Mathf.Clamp(targetTime, minBakeTime, maxBakeTime);
-            currentBakeTime = Mathf.Round(targetTime / timeStep) * timeStep;
-            
-            if (temperatureSlider != null)
-                temperatureSlider.value = currentTemperature;
-            if (timeSlider != null)
-                timeSlider.value = currentBakeTime;
-            
-            UpdateDisplay();
-            SetStatus($"Recipe set: {currentTemperature}°C for {currentBakeTime}s");
-            
-            if (debugMode) Debug.Log($"Oven set from recipe: {recipe.name}");
-        }
-        else
-        {
-            if (debugMode) Debug.Log($"No oven-specific settings found for recipe: {recipe.name}");
-        }
-    }
-    
-    #endregion
-    
-    #region Getters
     
     public float GetProgress()
     {
-        if (currentBakeTime <= 0) return 0;
-        return Mathf.Clamp01(elapsedTime / currentBakeTime);
+        if (currentBakeTimeSeconds <= 0) return 0;
+        return Mathf.Clamp01(elapsedSeconds / currentBakeTimeSeconds);
     }
     
-    public bool IsDone()
+    public void SetBakeTimeMinutes(float minutes)
     {
-        return elapsedTime >= currentBakeTime && isBaking;
+        if (isBaking) return;
+        currentBakeTimeMinutes = Mathf.Clamp(minutes, minBakeTimeMinutes, maxBakeTimeMinutes);
+        currentBakeTimeSeconds = ConvertMinutesToSeconds(currentBakeTimeMinutes);
+        UpdateDisplay();
     }
     
-    public bool IsBurnt()
+    public float GetRemainingTimeMinutes()
     {
-        return elapsedTime > currentBakeTime * 1.2f && isBaking;
+        if (!isBaking) return currentBakeTimeMinutes;
+        float remainingSeconds = Mathf.Max(0, currentBakeTimeSeconds - elapsedSeconds);
+        return ConvertSecondsToMinutes(remainingSeconds);
     }
     
-    #endregion
+    private void OnDestroy()
+    {
+        if (bakingCoroutine != null) StopCoroutine(bakingCoroutine);
+        if (temperatureAnimationCoroutine != null) StopCoroutine(temperatureAnimationCoroutine);
+    }
 }
