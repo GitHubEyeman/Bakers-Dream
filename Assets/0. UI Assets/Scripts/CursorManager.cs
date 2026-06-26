@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using System;
+using TMPro;
 
 public class CursorManager : MonoBehaviour
 {
@@ -19,6 +21,11 @@ public class CursorManager : MonoBehaviour
     [SerializeField] private int spriteSetNo = 0;
     [SerializeField] private Sprite[] defaultSprite;
     [SerializeField] private Sprite[] leftClickSprite;
+
+    [Header("Popup Box Settings")]
+    [SerializeField] private GameObject contentBox;
+    [SerializeField] private TextMeshProUGUI popupText;
+    
 
     public int SpriteSetNo {get => spriteSetNo; set => spriteSetNo = value;}
 
@@ -43,6 +50,7 @@ public class CursorManager : MonoBehaviour
 
         if (Mouse.current.leftButton.isPressed) SetGrabState(true);
         else SetGrabState(false);
+        
     }
 
     public void SetGrabState(bool isDragging)
@@ -58,5 +66,45 @@ public class CursorManager : MonoBehaviour
     void OnDisable()
     {
         Cursor.visible = true; 
+    }
+
+    public void SetPopupBox(String text)
+    {
+        popupText.SetText(text);
+    }
+
+    public void EnablePopupBox(bool isEnabled)
+    {
+        // Debug.Log("Enabled: "+ isEnabled);
+        contentBox.SetActive(isEnabled);
+        SetPopupBoxPosition("none");
+    }
+    public void EnablePopupBox(bool isEnabled, String direction)
+    {
+        contentBox.SetActive(isEnabled);
+        SetPopupBoxPosition(direction);
+    }
+
+    public void SetPopupBoxPosition (String direction)
+    {
+        Vector3 newPosition = contentBox.transform.localPosition;
+        newPosition.x = 119f;
+        newPosition.y = -15f;
+
+        if (string.Equals(direction, "left", StringComparison.OrdinalIgnoreCase))
+        {
+            newPosition.x = -119f;
+        }
+        if (string.Equals(direction, "up", StringComparison.OrdinalIgnoreCase))
+        {
+            newPosition.y = 140f;
+        }
+        if (string.Equals(direction, "upleft", StringComparison.OrdinalIgnoreCase))
+        {
+            newPosition.x = -119f;
+            newPosition.y = 140f;
+        }
+
+        contentBox.transform.localPosition = newPosition;
     }
 }

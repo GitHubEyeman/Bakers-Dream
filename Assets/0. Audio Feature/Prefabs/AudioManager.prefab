@@ -83,6 +83,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: e01a28aff70e20470a78ca4cb7233732, type: 3}
   - name: monsfx
     clip: {fileID: 8300000, guid: acd661ccf2d647fa6aa614f0f116b15b, type: 3}
+  - name: Click
+    clip: {fileID: 8300000, guid: cb231dc76449c8e46989b1203a51c32d, type: 3}
 --- !u!1 &4677555375257585172
 GameObject:
   m_ObjectHideFlags: 0
