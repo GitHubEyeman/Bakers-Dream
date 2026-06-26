@@ -19,10 +19,8 @@ MonoBehaviour:
   requiredIngredients:
   - itemName: 11
     amount: 1
-  minTimer: 10
-  maxTimer: 20
+  - itemName: 11
+    amount: 1
   minTemperature: 150
   maxTemperature: 250
   optimalTemperature: 200
-  overcookedTemperature: 251
-  undercookedTemperature: 100

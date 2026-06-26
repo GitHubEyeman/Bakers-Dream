@@ -8,6 +8,7 @@ using TMPro;
 public class IngrePrep : MonoBehaviour
 {
     [SerializeField] private Slider CupRuler;
+    [SerializeField] private Slider CupRulerSmall;
     [SerializeField] private TextMeshProUGUI IngreListText; // assign in Inspector
     [SerializeField] private TextMeshProUGUI TipsPrompt; // assign in Inspector - displays tips/messages
     [SerializeField] private TextMeshProUGUI Recipe; // assign in Inspector - displays recipe
@@ -37,6 +38,11 @@ public class IngrePrep : MonoBehaviour
         OneThirdcups,
         Quartercups,
         OneFifthcups,
+        FullcupsSmall,
+        HalfcupsSmall,
+        OneThirdcupsSmall,
+        QuartercupsSmall,
+        OneFifthcupsSmall,
     }
 
     public enum IngredientType
@@ -64,7 +70,8 @@ public class IngrePrep : MonoBehaviour
 
     // New explicit mappings for cup and scoop measurements (in ml and grams respectively)
     private static readonly int[] CupAmounts = { 500, 400, 300, 200, 100 }; // Full -> OneFifth
-    private static readonly int[] ScoopAmounts = { 250, 125, 80, 62, 50 }; // Full -> OneFifth
+    private static readonly int[] CupAmountsSmall = { 75, 50, 25, 5, 1 }; // Full -> OneFifth
+    private static readonly int[] ScoopAmounts = { 250, 100, 25, 5, 1 }; // Full -> OneFifth
 
     // Recipe ingredient requirements (key: ingredient name, value: amount needed)
     private Dictionary<RecipeType, Dictionary<string, int>> RecipeRequirements = new Dictionary<RecipeType, Dictionary<string, int>>()
@@ -140,7 +147,38 @@ public class IngrePrep : MonoBehaviour
                     ShowTip("Cup measure set to 500ml");
                     currentCup = CupMeasure.Fullcups;
                 }
-                // Optionally update UI or do something with the new cupMeasure value
+            });
+        }
+
+        if (CupRulerSmall != null)
+        {
+            CupRulerSmall.onValueChanged.AddListener((value) =>
+            {
+                if (value == 1f)
+                {
+                    ShowTip("Cup measure set to 1ml");
+                    currentCup = CupMeasure.OneFifthcupsSmall;
+                }
+                else if (value == 2f)
+                {
+                    ShowTip("Cup measure set to 5ml");
+                    currentCup = CupMeasure.QuartercupsSmall;
+                }
+                else if (value == 3f)
+                {
+                    ShowTip("Cup measure set to 25ml");
+                    currentCup = CupMeasure.OneThirdcupsSmall;
+                }
+                else if (value == 4f)
+                {
+                    ShowTip("Cup measure set to 50ml");
+                    currentCup = CupMeasure.HalfcupsSmall;
+                }
+                else if (value == 5f)
+                {
+                    ShowTip("Cup measure set to 75ml");
+                    currentCup = CupMeasure.FullcupsSmall;
+                }
             });
         }
 
@@ -397,7 +435,7 @@ public class IngrePrep : MonoBehaviour
         // Adds or increments the selected ingredient in IngreList.
         // Rules:
         // - Scoops: Flour, Yeast, Salt, Sugar  -> use ScoopAmounts (grams)
-        // - Cups: Water, OliveOil, Honey, Milk -> use CupAmounts  (ml)
+        // - Cups: Water, OliveOil, Honey, Milk -> use CupAmounts or CupAmountsSmall (ml)
         // - Normal: Butter, Eggs                -> 1 unit/block
         string key;
         int amount = 0;
@@ -438,8 +476,18 @@ public class IngrePrep : MonoBehaviour
                     ShowTip($"{currentIngredient} must be added in Cup mode");
                     return;
                 }
-                // Use explicit ml mapping
-                amount = CupAmounts[(int)currentCup];
+                // Use explicit ml mapping - determine which array to use based on currentCup
+                if (currentCup >= CupMeasure.FullcupsSmall)
+                {
+                    // Using small cup amounts
+                    int smallIndex = (int)currentCup - (int)CupMeasure.FullcupsSmall;
+                    amount = CupAmountsSmall[smallIndex];
+                }
+                else
+                {
+                    // Using regular cup amounts
+                    amount = CupAmounts[(int)currentCup];
+                }
                 ShowTip($"Measured {amount} ml of {key}");
                 break;
 
