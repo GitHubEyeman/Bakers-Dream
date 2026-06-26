@@ -89,13 +89,13 @@ public class DoughKneadingDirectInput : MonoBehaviour
                     mouseStartPos = currentMousePos;
                     //doughMesh.SetBlendShapeWeight(INDEX_START_GRAB, 100f);
                     StartBlendShapeTween(INDEX_START_GRAB, 100f, 0.1f);
-                    AudioManager.Instance.PlaySFX("monsfx",4);
+                    // AudioManager.Instance.PlaySFX("monsfx",4);
                 }
                 else if (hit.collider.CompareTag("botDough") && isPullFullyCompleted)
                 {
                     isPushActive = true;
                     mouseStartPos = currentMousePos;
-                    AudioManager.Instance.PlaySFX("moonsfx");
+                    // AudioManager.Instance.PlaySFX("moonsfx");
                 }
             }
         }
