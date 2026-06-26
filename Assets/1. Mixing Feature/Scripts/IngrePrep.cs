@@ -64,7 +64,8 @@ public class IngrePrep : MonoBehaviour
 
     // New explicit mappings for cup and scoop measurements (in ml and grams respectively)
     private static readonly int[] CupAmounts = { 500, 400, 300, 200, 100 }; // Full -> OneFifth
-    private static readonly int[] ScoopAmounts = { 250, 125, 80, 62, 50 }; // Full -> OneFifth
+    private static readonly int[] ScoopAmounts = { 250, 100, 25, 5, 1 }; // Full -> OneFifth
+    private static readonly int[] SmallerCupAmount = { 75, 50, 25, 5, 1 }; // Full -> OneFifth
 
     // Recipe ingredient requirements (key: ingredient name, value: amount needed)
     private Dictionary<RecipeType, Dictionary<string, int>> RecipeRequirements = new Dictionary<RecipeType, Dictionary<string, int>>()
