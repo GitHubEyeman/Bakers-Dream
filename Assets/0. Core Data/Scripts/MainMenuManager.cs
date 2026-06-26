@@ -249,7 +249,8 @@ public class MainMenuManager : MonoBehaviour
             try
             {
                 Debug.Log($"Loading scene by index: {gameSceneIndex}");
-                SceneManager.LoadScene(gameSceneIndex);
+                // SceneManager.LoadScene(gameSceneIndex);
+                SceneTransitioner.Instance.TriggerTransition("1. Mixing");
                 Debug.Log($"Successfully loaded scene index: {gameSceneIndex}");
                 return;
             }
@@ -265,7 +266,8 @@ public class MainMenuManager : MonoBehaviour
         try
         {
             Debug.Log($"Loading scene by name: {gameSceneName}");
-            SceneManager.LoadScene(gameSceneName);
+            // SceneManager.LoadScene(gameSceneName);
+            SceneTransitioner.Instance.TriggerTransition("1. Mixing");
             Debug.Log($"Successfully loaded scene: {gameSceneName}");
         }
         catch (System.Exception e)

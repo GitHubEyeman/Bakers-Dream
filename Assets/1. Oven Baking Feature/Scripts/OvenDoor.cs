@@ -30,6 +30,7 @@ public class OvenDoor : MonoBehaviour
     [ContextMenu("Toggle Door")]
     public void ToggleDoor()
     {
+        AudioManager.Instance.PlaySFX("Oven");
         if (animationCoroutine != null)
         {
             StopCoroutine(animationCoroutine);

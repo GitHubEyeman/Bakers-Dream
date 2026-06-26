@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ButtonSoundScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
@@ -14,6 +15,13 @@ public class ButtonSoundScript : MonoBehaviour, IPointerEnterHandler, IPointerEx
     private Vector3 originalScale;
 
     [SerializeField] private CursorManager cursorManager;
+    [SerializeField] private bool enableAutoAdd = true;
+    private Button button;
+
+    void Awake()
+    {
+        
+    }
 
     private void Start()
     {
@@ -21,6 +29,16 @@ public class ButtonSoundScript : MonoBehaviour, IPointerEnterHandler, IPointerEx
         // Store the starting scale of the button
         originalScale = transform.localScale;
         targetScale = originalScale;
+
+        if (!enableAutoAdd) return;
+        
+        button = GetComponent<Button>();
+        
+        // 1. Force remove it first (prevents duplicates if Awake/Start runs twice)
+        button.onClick.RemoveListener(OnClickPlaySound);
+        
+        // 2. Safely add it exactly once
+        button.onClick.AddListener(OnClickPlaySound);
     }
 
     private void Update()

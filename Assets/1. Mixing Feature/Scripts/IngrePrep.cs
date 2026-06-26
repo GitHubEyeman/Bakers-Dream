@@ -72,6 +72,7 @@ public class IngrePrep : MonoBehaviour
     private static readonly int[] CupAmounts = { 500, 400, 300, 200, 100 }; // Full -> OneFifth
     private static readonly int[] CupAmountsSmall = { 75, 50, 25, 5, 1 }; // Full -> OneFifth
     private static readonly int[] ScoopAmounts = { 250, 100, 25, 5, 1 }; // Full -> OneFifth
+    [SerializeField] private RecipeData[] allAvailableRecipes;
 
     // Recipe ingredient requirements (key: ingredient name, value: amount needed)
     private Dictionary<RecipeType, Dictionary<string, int>> RecipeRequirements = new Dictionary<RecipeType, Dictionary<string, int>>()
@@ -102,6 +103,103 @@ public class IngrePrep : MonoBehaviour
         }},
     };
 
+
+
+
+
+
+  private void InitializeRandomRecipes()
+    {
+        RecipeRequirements.Clear();
+
+        // Dynamically grab and insert a random recipe
+        RecipeRequirements.Add(RecipeType.Bread, GetRandomRecipeRequirementsForType(RecipeType.Bread));
+
+        // Print to console to double-check
+        PrintRequirementsLog();
+    }
+
+    private Dictionary<string, int> GetRandomRecipeRequirementsForType(RecipeType targetType)
+    {
+        List<RecipeData> matchingRecipes = new List<RecipeData>();
+
+        foreach (RecipeData recipe in allAvailableRecipes)
+        {
+            if (recipe == null) continue;
+
+            // FIX: Check BOTH the internal recipe name AND the ingredientResult name safely
+            bool isBreadByName = !string.IsNullOrEmpty(recipe.recipeName) && 
+                                 recipe.recipeName.Contains("Bread", System.StringComparison.OrdinalIgnoreCase);
+            
+            bool isBreadByResult = recipe.ingredientResult != null && 
+                                   recipe.ingredientResult.name.Contains("Bread", System.StringComparison.OrdinalIgnoreCase);
+
+            if (targetType == RecipeType.Bread && (isBreadByName || isBreadByResult))
+            {
+                matchingRecipes.Add(recipe);
+            }
+        }
+
+        // EMERGENCY FALLBACK: If the filter still finds nothing, take ANY available recipe 
+        // so your game doesn't break while you fix asset names.
+        if (matchingRecipes.Count == 0 && allAvailableRecipes.Length > 0)
+        {
+            Debug.LogWarning($"[BakersDream] No recipes explicitly matched '{targetType}'. Using a random fallback asset!");
+            matchingRecipes.Add(allAvailableRecipes[Random.Range(0, allAvailableRecipes.Length)]);
+        }
+
+        if (matchingRecipes.Count == 0)
+        {
+            Debug.LogError("[BakersDream] The allAvailableRecipes array is completely empty in the Inspector!");
+            return new Dictionary<string, int>();
+        }
+
+        // Select a completely random recipe from our matches
+        int randomIndex = Random.Range(0, matchingRecipes.Count);
+        RecipeData chosenRecipe = matchingRecipes[randomIndex];
+
+        Debug.Log($"[BakersDream] Successfully matched and loaded: '{chosenRecipe.recipeName}'");
+
+        // Uses your exact script method
+        return chosenRecipe.GetRecipeDictionary();
+    }
+
+    private void PrintRequirementsLog()
+    {
+        if (RecipeRequirements.Count == 0)
+        {
+            Debug.LogError("RecipeRequirements Dictionary is completely empty!");
+            return;
+        }
+
+        foreach (var outerPair in RecipeRequirements)
+        {
+            Debug.Log($"<b>Loaded Category: {outerPair.Key}</b> (Contains {outerPair.Value.Count} ingredients)");
+            foreach (var innerPair in outerPair.Value)
+            {
+                Debug.Log($" -> Requirement: {innerPair.Key} x{innerPair.Value}");
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public float CupMeasurement;
     public MouseType currentMouseType = MouseType.Normal;
     public ScoopMeasure currentScoop = ScoopMeasure.FullScoops;
@@ -112,6 +210,8 @@ public class IngrePrep : MonoBehaviour
 
     void Start()
     {
+        InitializeRandomRecipes();
+
         if (TipsPrompt != null)
             TipsPrompt.text = "";
 
@@ -262,7 +362,7 @@ public class IngrePrep : MonoBehaviour
         var ingredients = RecipeRequirements[currentRecipe];
         foreach (var ingredient in ingredients)
         {
-            sb.Append("• ");
+            sb.Append("ï¿½ ");
             sb.Append(ingredient.Key);
             sb.Append(": ");
             sb.Append(ingredient.Value);

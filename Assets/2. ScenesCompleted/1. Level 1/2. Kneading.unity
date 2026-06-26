@@ -2441,6 +2441,7 @@ GameObject:
   - component: {fileID: 1990606121}
   - component: {fileID: 1990606120}
   - component: {fileID: 1990606119}
+  - component: {fileID: 1990606123}
   m_Layer: 5
   m_Name: NextSceneButton
   m_TagString: Untagged
@@ -2575,6 +2576,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1990606117}
   m_CullTransparentMesh: 1
+--- !u!114 &1990606123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1990606117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b2dd338560b924ebc73316a6001646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundScript
+  hoverScale: 1.1
+  pressScale: 0.9
+  animationSpeed: 15
+  cursorManager: {fileID: 0}
+  enableAutoAdd: 1
 --- !u!1 &2126621548
 GameObject:
   m_ObjectHideFlags: 0
@@ -2701,6 +2719,7 @@ GameObject:
   - component: {fileID: 2133038399}
   - component: {fileID: 2133038398}
   - component: {fileID: 2133038401}
+  - component: {fileID: 2133038402}
   m_Layer: 5
   m_Name: ReturnButton
   m_TagString: Untagged
@@ -2835,6 +2854,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonTransition
   sceneTransitioner: {fileID: 0}
+--- !u!114 &2133038402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133038396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b2dd338560b924ebc73316a6001646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundScript
+  hoverScale: 1.1
+  pressScale: 0.9
+  animationSpeed: 15
+  cursorManager: {fileID: 0}
+  enableAutoAdd: 1
 --- !u!1001 &5068869490177652903
 PrefabInstance:
   m_ObjectHideFlags: 0

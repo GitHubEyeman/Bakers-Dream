@@ -418,6 +418,7 @@ GameObject:
   - component: {fileID: 71373855}
   - component: {fileID: 71373854}
   - component: {fileID: 71373853}
+  - component: {fileID: 71373856}
   m_Layer: 5
   m_Name: RecipeListBtn
   m_TagString: Untagged
@@ -551,6 +552,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 71373851}
   m_CullTransparentMesh: 1
+--- !u!114 &71373856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 71373851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b2dd338560b924ebc73316a6001646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundScript
+  hoverScale: 1.1
+  pressScale: 0.9
+  animationSpeed: 15
+  cursorManager: {fileID: 0}
+  enableAutoAdd: 1
 --- !u!1 &91478632
 GameObject:
   m_ObjectHideFlags: 0
@@ -866,6 +884,7 @@ GameObject:
   - component: {fileID: 183017525}
   - component: {fileID: 183017524}
   - component: {fileID: 183017523}
+  - component: {fileID: 183017526}
   m_Layer: 5
   m_Name: ResetBtn
   m_TagString: Untagged
@@ -987,6 +1006,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 183017521}
   m_CullTransparentMesh: 1
+--- !u!114 &183017526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 183017521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b2dd338560b924ebc73316a6001646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundScript
+  hoverScale: 1.1
+  pressScale: 0.9
+  animationSpeed: 15
+  cursorManager: {fileID: 0}
+  enableAutoAdd: 1
 --- !u!1 &188420608
 GameObject:
   m_ObjectHideFlags: 0
@@ -3341,6 +3377,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 771181774}
   m_CullTransparentMesh: 1
+--- !u!1001 &773853099
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 134178236988640285, guid: cf603a02d4bd9699e946c3e0fe9b0df6, type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 1709429530767278759, guid: cf603a02d4bd9699e946c3e0fe9b0df6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.26403
+      objectReference: {fileID: 0}
+    - target: {fileID: 1709429530767278759, guid: cf603a02d4bd9699e946c3e0fe9b0df6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.04811
+      objectReference: {fileID: 0}
+    - target: {fileID: 1709429530767278759, guid: cf603a02d4bd9699e946c3e0fe9b0df6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.10836
+      objectReference: {fileID: 0}
+    - target: {fileID: 1709429530767278759, guid: cf603a02d4bd9699e946c3e0fe9b0df6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1709429530767278759, guid: cf603a02d4bd9699e946c3e0fe9b0df6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1709429530767278759, guid: cf603a02d4bd9699e946c3e0fe9b0df6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1709429530767278759, guid: cf603a02d4bd9699e946c3e0fe9b0df6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1709429530767278759, guid: cf603a02d4bd9699e946c3e0fe9b0df6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1709429530767278759, guid: cf603a02d4bd9699e946c3e0fe9b0df6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1709429530767278759, guid: cf603a02d4bd9699e946c3e0fe9b0df6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cf603a02d4bd9699e946c3e0fe9b0df6, type: 3}
 --- !u!1 &774348269
 GameObject:
   m_ObjectHideFlags: 0
@@ -4113,6 +4206,7 @@ GameObject:
   - component: {fileID: 951841848}
   - component: {fileID: 951841847}
   - component: {fileID: 951841846}
+  - component: {fileID: 951841849}
   m_Layer: 5
   m_Name: InputIngreListBtn
   m_TagString: Untagged
@@ -4246,6 +4340,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 951841844}
   m_CullTransparentMesh: 1
+--- !u!114 &951841849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 951841844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b2dd338560b924ebc73316a6001646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundScript
+  hoverScale: 1.1
+  pressScale: 0.9
+  animationSpeed: 15
+  cursorManager: {fileID: 0}
+  enableAutoAdd: 1
 --- !u!1 &954393015
 GameObject:
   m_ObjectHideFlags: 0
@@ -4530,6 +4641,7 @@ GameObject:
   - component: {fileID: 1044086680}
   - component: {fileID: 1044086679}
   - component: {fileID: 1044086678}
+  - component: {fileID: 1044086681}
   m_Layer: 5
   m_Name: CupsBtn
   m_TagString: Untagged
@@ -4687,6 +4799,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1044086676}
   m_CullTransparentMesh: 1
+--- !u!114 &1044086681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044086676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b2dd338560b924ebc73316a6001646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundScript
+  hoverScale: 1.1
+  pressScale: 0.9
+  animationSpeed: 15
+  cursorManager: {fileID: 0}
+  enableAutoAdd: 1
 --- !u!1 &1067668882
 GameObject:
   m_ObjectHideFlags: 0
@@ -5466,8 +5595,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -5642,6 +5771,7 @@ GameObject:
   - component: {fileID: 1257264364}
   - component: {fileID: 1257264363}
   - component: {fileID: 1257264362}
+  - component: {fileID: 1257264365}
   m_Layer: 5
   m_Name: HandBtn
   m_TagString: Untagged
@@ -5763,6 +5893,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1257264360}
   m_CullTransparentMesh: 1
+--- !u!114 &1257264365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1257264360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b2dd338560b924ebc73316a6001646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundScript
+  hoverScale: 1.1
+  pressScale: 0.9
+  animationSpeed: 15
+  cursorManager: {fileID: 0}
+  enableAutoAdd: 1
 --- !u!1 &1276691711
 GameObject:
   m_ObjectHideFlags: 0
@@ -6692,6 +6839,7 @@ GameObject:
   - component: {fileID: 1373369750}
   - component: {fileID: 1373369749}
   - component: {fileID: 1373369752}
+  - component: {fileID: 1373369753}
   m_Layer: 5
   m_Name: FinishBtn
   m_TagString: Untagged
@@ -6838,6 +6986,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonTransition
   sceneTransitioner: {fileID: 0}
+--- !u!114 &1373369753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1373369747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b2dd338560b924ebc73316a6001646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundScript
+  hoverScale: 1.1
+  pressScale: 0.9
+  animationSpeed: 15
+  cursorManager: {fileID: 0}
+  enableAutoAdd: 1
 --- !u!1 &1374793829
 GameObject:
   m_ObjectHideFlags: 0
@@ -7775,6 +7940,16 @@ MonoBehaviour:
   IngreListText: {fileID: 1067668884}
   TipsPrompt: {fileID: 555664700}
   Recipe: {fileID: 1251872747}
+  allAvailableRecipes:
+  - {fileID: 11400000, guid: 5997715f64cc02418b088d03d3e81a9d, type: 2}
+  - {fileID: 11400000, guid: 5db989bb075f20611a7b0aabdf406aab, type: 2}
+  - {fileID: 11400000, guid: 3050d2a5b7241404882c86a1c24ea1c0, type: 2}
+  - {fileID: 11400000, guid: baa4e58c08a4b5b41b598a930f70b088, type: 2}
+  - {fileID: 11400000, guid: 61f1fe80e174a5202ac5e50e31525def, type: 2}
+  - {fileID: 11400000, guid: 704ab4cbe057ac83d89c0c484ddd5259, type: 2}
+  - {fileID: 11400000, guid: f4662d94c153f32feac94418fe8da94c, type: 2}
+  - {fileID: 11400000, guid: 2936db7455f5fdfedbec1b2ed10289d4, type: 2}
+  - {fileID: 11400000, guid: d9b3d837fda349f21b68964f8fe6a3c6, type: 2}
   CupMeasurement: 0
   currentMouseType: 0
   currentScoop: 2
@@ -9480,6 +9655,7 @@ GameObject:
   - component: {fileID: 1810680036}
   - component: {fileID: 1810680035}
   - component: {fileID: 1810680034}
+  - component: {fileID: 1810680037}
   m_Layer: 5
   m_Name: ScoopsBtn
   m_TagString: Untagged
@@ -9625,6 +9801,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1810680032}
   m_CullTransparentMesh: 1
+--- !u!114 &1810680037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1810680032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b2dd338560b924ebc73316a6001646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundScript
+  hoverScale: 1.1
+  pressScale: 0.9
+  animationSpeed: 15
+  cursorManager: {fileID: 0}
+  enableAutoAdd: 1
 --- !u!1 &1925727356
 GameObject:
   m_ObjectHideFlags: 0
@@ -10896,3 +11089,4 @@ SceneRoots:
   - {fileID: 1780826223}
   - {fileID: 1360889783}
   - {fileID: 1254119574}
+  - {fileID: 773853099}

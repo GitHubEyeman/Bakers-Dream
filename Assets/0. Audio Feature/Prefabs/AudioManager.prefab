@@ -74,6 +74,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 0ba91fa6aa29ded3a93418acb80f586a, type: 3}
   - name: PureAgain
     clip: {fileID: 8300000, guid: 1fad74041986e6115b26531d071ddb85, type: 3}
+  - name: BGM
+    clip: {fileID: 8300000, guid: 2c6250cd0ccff41a396ddb2251517cfc, type: 3}
   soundEffects:
   - name: sfx1
     clip: {fileID: 8300000, guid: 4c813562f76db144382374e3aa257c88, type: 3}
@@ -85,6 +87,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: acd661ccf2d647fa6aa614f0f116b15b, type: 3}
   - name: Click
     clip: {fileID: 8300000, guid: cb231dc76449c8e46989b1203a51c32d, type: 3}
+  - name: Oven
+    clip: {fileID: 8300000, guid: e8af9035f5758f44da37af4225a02619, type: 3}
 --- !u!1 &4677555375257585172
 GameObject:
   m_ObjectHideFlags: 0

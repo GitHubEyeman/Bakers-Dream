@@ -81,7 +81,7 @@ public class PauseMenu : MonoBehaviour
         isPaused = false;
 
         // CHANGE SCENE NAME TO MAIN MENU LATER!
-        //SceneManager.LoadScene(sceneName);
+        SceneManager.LoadScene(sceneName);
     }
 
     // Closes the game application

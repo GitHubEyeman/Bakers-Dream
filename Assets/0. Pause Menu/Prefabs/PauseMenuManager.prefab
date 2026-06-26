@@ -427,6 +427,7 @@ GameObject:
   - component: {fileID: 4020479289884234869}
   - component: {fileID: 4302885724685809189}
   - component: {fileID: 3691683794428066356}
+  - component: {fileID: 1267542962041771062}
   m_Layer: 0
   m_Name: BackButton
   m_TagString: Untagged
@@ -548,6 +549,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1267542962041771062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2176370684515892019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b2dd338560b924ebc73316a6001646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundScript
+  hoverScale: 1.1
+  pressScale: 0.9
+  animationSpeed: 15
+  cursorManager: {fileID: 0}
 --- !u!1 &2467726495483734307
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,6 +577,7 @@ GameObject:
   - component: {fileID: 207030743602126228}
   - component: {fileID: 7147647671334173967}
   - component: {fileID: 1409337029434283671}
+  - component: {fileID: 1187957775959923768}
   m_Layer: 0
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -681,6 +699,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1187957775959923768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2467726495483734307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b2dd338560b924ebc73316a6001646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundScript
+  hoverScale: 1.1
+  pressScale: 0.9
+  animationSpeed: 15
+  cursorManager: {fileID: 0}
 --- !u!1 &3097804345880840451
 GameObject:
   m_ObjectHideFlags: 0
@@ -693,6 +727,7 @@ GameObject:
   - component: {fileID: 6929752424024329098}
   - component: {fileID: 8107367223457228329}
   - component: {fileID: 4767341180317790047}
+  - component: {fileID: 8935512740964383855}
   m_Layer: 0
   m_Name: ExitButton
   m_TagString: Untagged
@@ -811,9 +846,25 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: StartScene
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8935512740964383855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3097804345880840451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b2dd338560b924ebc73316a6001646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundScript
+  hoverScale: 1.1
+  pressScale: 0.9
+  animationSpeed: 15
+  cursorManager: {fileID: 0}
 --- !u!1 &3734817974470585246
 GameObject:
   m_ObjectHideFlags: 0
@@ -2712,6 +2763,7 @@ GameObject:
   - component: {fileID: 3796857989403169292}
   - component: {fileID: 8474361652957435469}
   - component: {fileID: 830138210338338691}
+  - component: {fileID: 4366308484077809975}
   m_Layer: 0
   m_Name: ResumeButton
   m_TagString: Untagged
@@ -2833,6 +2885,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4366308484077809975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8287893076032763302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b2dd338560b924ebc73316a6001646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundScript
+  hoverScale: 1.1
+  pressScale: 0.9
+  animationSpeed: 15
+  cursorManager: {fileID: 0}
 --- !u!1 &8633792977014050417
 GameObject:
   m_ObjectHideFlags: 0
