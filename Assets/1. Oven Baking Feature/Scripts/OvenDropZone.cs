@@ -10,21 +10,22 @@ public class OvenDropZone : DropZone
     [SerializeField] private Transform itemSpawnPoint;
 
     [Header("Baking Settings")]
-    [SerializeField] private OvenRecipeData recipe;
+    [SerializeField] private OvenRecipeData[] recipes;      // <-- multiple recipes
     [SerializeField] private int currentTemperature = 180;   // can be changed via UI
 
     [Header("UI Elements")]
-    [SerializeField] private GameObject bakingPanel;        // parent panel to show/hide
+    [SerializeField] private GameObject bakingPanel;
     [SerializeField] private GameObject OvenDoorButton;
     [SerializeField] private TextMeshProUGUI temperatureText;
     [SerializeField] private TextMeshProUGUI timerText;
-    [SerializeField] private Slider temperatureSlider;      // optional – assign if you have one
+    [SerializeField] private Slider temperatureSlider;
 
     [Header("Fake Timer Settings")]
-    [SerializeField] private float fakeBakeTimeMinutes = 5f; // total displayed baking time (minutes)
+    [SerializeField] private float fakeBakeTimeMinutes = 5f;
 
     private bool isBaking = false;
     private GameObject currentItem;
+    private OvenRecipeData activeRecipe;   // the recipe being used for the current bake
 
     void Start()
     {
@@ -32,7 +33,6 @@ public class OvenDropZone : DropZone
         SetTemperature(50);
     }
 
-    // Call this from your temperature slider's OnValueChanged event
     public void SetTemperature(float temp)
     {
         currentTemperature = (int)temp;
@@ -40,29 +40,38 @@ public class OvenDropZone : DropZone
             temperatureText.text = $"{currentTemperature}°C";
     }
 
-    // Called directly from the UI slot
     public void BakeItem(IngredientsData ingredientData, GameObject prefab)
     {
         if (prefab == null || isBaking) return;
 
         string ingredientName = ingredientData.ingredientName;
-        var requiredDict = recipe.GetRecipeDictionary();
-        if (!requiredDict.ContainsKey(ingredientName))
+
+        // Find a recipe that requires this ingredient
+        activeRecipe = null;
+        foreach (var recipe in recipes)
         {
-            Debug.Log($"'{ingredientName}' is not required for this recipe.");
+            var requiredDict = recipe.GetRecipeDictionary();
+            if (requiredDict.ContainsKey(ingredientName))
+            {
+                activeRecipe = recipe;
+                break;
+            }
+        }
+
+        if (activeRecipe == null)
+        {
+            Debug.Log($"'{ingredientName}' is not required for any oven recipe.");
             return;
         }
+        Debug.Log($"Baking {activeRecipe}");
         if (!ovenDoor.isOpen) ovenDoor.ToggleDoor();
 
-        // Remove from hotbar (rebuilds the hotbar and destroys this slot)
         RemoveItemFromHotbar(ingredientName);
 
-        // Spawn the dough inside the oven
         currentItem = Instantiate(prefab, itemSpawnPoint.position, Quaternion.identity, transform);
         currentItem.transform.localScale = Vector3.zero;
         StartCoroutine(ScaleUp(currentItem, 0.3f));
 
-        // Start the baking coroutine
         StartCoroutine(BakeProcess());
     }
 
@@ -84,82 +93,79 @@ public class OvenDropZone : DropZone
         isBaking = true;
         temperatureSlider.interactable = false;
         if (OvenDoorButton != null) OvenDoorButton.SetActive(false);
-        // Show the baking UI panel
         if (bakingPanel != null) bakingPanel.SetActive(true);
 
-        // Close door if assigned
         if (ovenDoor != null)
         {
             yield return new WaitForSeconds(1.5f);
             if (ovenDoor.isOpen) ovenDoor.ToggleDoor();
-            yield return new WaitForSeconds(0.6f); // match your close duration
+            yield return new WaitForSeconds(0.6f);
         }
 
-        // Determine total baking time (random between min and max) – this is the REAL time (in seconds)
+        // Use activeRecipe for timer
         float totalBakeTime = Random.Range(5, 10);
         float timeRemaining = totalBakeTime;
 
-        // Update temperature display once
         if (temperatureText != null)
             temperatureText.text = $"{currentTemperature}°C";
 
-        // Set initial fake timer to full fake time (e.g., "05:00")
         UpdateTimerDisplay(fakeBakeTimeMinutes * 60f);
 
-        // Baking loop – update timer every frame
         while (timeRemaining > 0)
         {
             timeRemaining -= Time.deltaTime;
-            // Clamp to zero
             if (timeRemaining < 0) timeRemaining = 0;
 
-            // Compute fake remaining time based on progress (0 -> 1)
-            float progress = 1f - (timeRemaining / totalBakeTime); // 0 at start, 1 at end
+            float progress = 1f - (timeRemaining / totalBakeTime);
             float fakeRemaining = fakeBakeTimeMinutes * 60f * (1f - progress);
             UpdateTimerDisplay(fakeRemaining);
 
             yield return null;
         }
 
-        // Baking finished – show "00:00"
         UpdateTimerDisplay(0f);
 
-        // Determine result quality based on temperature
-        string resultQuality = EvaluateBakingResult();
+        string resultQuality = EvaluateBakingResult(); // now uses activeRecipe
 
-        // Produce the final item
-        GameObject resultPrefab = recipe.ingredientResult?.itemPrefab;
+        GameObject resultPrefab = activeRecipe.ingredientResult?.itemPrefab;
         if (resultPrefab != null)
         {
+            Debug.Log("resultPrefab is not NULL!");
             if (currentItem != null) Destroy(currentItem);
 
             GameObject bakedItem = Instantiate(resultPrefab, itemSpawnPoint.position, Quaternion.identity, transform);
             bakedItem.transform.localScale = Vector3.zero;
             StartCoroutine(ScaleUp(bakedItem, 0.3f));
 
-            // Add to inventory (the baked item)
-            SaveManager.Instance.CurrentSave.AddToInventory(recipe.ingredientResult.ingredientName);
+            SaveManager.Instance.CurrentSave.AddToInventory(activeRecipe.ingredientResult.ingredientName);
         }
 
-        // Debug the result (shows real time)
         Debug.Log($"Baking complete! Result: {resultQuality} (Temperature: {currentTemperature}°C, Real Time: {totalBakeTime}s, Displayed: {fakeBakeTimeMinutes}min)");
 
-        // Open door again
         if (ovenDoor != null)
         {
             yield return new WaitForSeconds(0.5f);
             if (!ovenDoor.isOpen) ovenDoor.ToggleDoor();
         }
 
-        // Hide the baking UI
         if (bakingPanel != null) bakingPanel.SetActive(false);
         if (OvenDoorButton != null) OvenDoorButton.SetActive(true);
 
+Debug.Log($"Baked {activeRecipe}");
+        //MOVE TO THE NEXT SCENE
+        yield return new WaitForSeconds(2.0f);
+        EvaluateBakingResultToScene();
+
+
+
+
+
+
         isBaking = false;
         currentItem = null;
+        activeRecipe = null; // clear the recipe reference
     }
 
-    // Helper to format and update the timer text
     private void UpdateTimerDisplay(float totalSeconds)
     {
         if (timerText == null) return;
@@ -169,18 +175,109 @@ public class OvenDropZone : DropZone
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
-    // Evaluates the baking quality based on the current temperature
     private string EvaluateBakingResult()
     {
-        if (currentTemperature > recipe.maxTemperature)
+        // Use the activeRecipe's thresholds
+        if (currentTemperature > activeRecipe.maxTemperature)
             return "Overcooked (burnt)";
-        if (currentTemperature < recipe.minTemperature)
+        if (currentTemperature < activeRecipe.minTemperature)
             return "Undercooked (raw)";
 
-        if (currentTemperature == recipe.optimalTemperature)
+        if (currentTemperature == activeRecipe.optimalTemperature)
             return "Perfect!";
-        if (currentTemperature >= recipe.minTemperature && currentTemperature <= recipe.maxTemperature)
+        if (currentTemperature >= activeRecipe.minTemperature && currentTemperature <= activeRecipe.maxTemperature)
             return "Good (acceptable)";
+
+        return "Unknown";
+    }
+
+    private string EvaluateBakingResultToScene()
+    {
+        System.String current = activeRecipe.ingredientResult.ingredientName;
+        // Use the activeRecipe's thresholds
+        if (currentTemperature > activeRecipe.maxTemperature)
+            {
+                SceneTransitioner.Instance.TriggerTransition("OvercookedBread");
+                return "Overcooked (burnt)";}
+        if (currentTemperature < activeRecipe.minTemperature)
+            {
+                SceneTransitioner.Instance.TriggerTransition("UndercookedBread");
+                return "Undercooked (raw)";}
+
+        if (currentTemperature == activeRecipe.optimalTemperature)
+            {
+                //HOW?
+                switch (current.ToLowerInvariant())
+                {
+                    case "cavedinbread":
+                        Debug.Log("cavedinbread");
+                        SceneTransitioner.Instance.TriggerTransition("CavedInBread");
+                        break;
+                        
+                    case "flatbread":
+                        Debug.Log("flatbread");
+                        SceneTransitioner.Instance.TriggerTransition("FlatBread");
+                        break;
+                                                
+                    case "goldenbread":
+                        Debug.Log("goldenbread");
+                        SceneTransitioner.Instance.TriggerTransition("GBread");
+                        break;
+                                                
+                    case "overcookedbread":
+                        Debug.Log("overcookedbread");
+                        SceneTransitioner.Instance.TriggerTransition("OvercookedBread");
+                        break;
+                                                
+                    case "undercookedbread":
+                        Debug.Log("undercookedbread");
+                        SceneTransitioner.Instance.TriggerTransition("UndercookedBread");
+                        break;
+                        
+                    default:
+                        Debug.Log("Item not recognized.");
+                        SceneTransitioner.Instance.TriggerTransition("");
+                        break;
+                }
+                return "Perfect!";}
+        if (currentTemperature >= activeRecipe.minTemperature && currentTemperature <= activeRecipe.maxTemperature)
+            {
+                //Same as above
+                switch (current.ToLowerInvariant())
+                {
+                    case "cavedinbread":
+                        Debug.Log("cavedinbread");
+                        SceneTransitioner.Instance.TriggerTransition("CavedInBread");
+                        break;
+                        
+                    case "flatbread":
+                        Debug.Log("flatbread");
+                        SceneTransitioner.Instance.TriggerTransition("FlatBread");
+                        break;
+                                                
+                    case "goldenbread":
+                        Debug.Log("goldenbread");
+                        SceneTransitioner.Instance.TriggerTransition("GBread");
+                        break;
+                                                
+                    case "overcookedbread":
+                        Debug.Log("overcookedbread");
+                        SceneTransitioner.Instance.TriggerTransition("OvercookedBread");
+                        break;
+                                                
+                    case "undercookedbread":
+                        Debug.Log("undercookedbread");
+                        SceneTransitioner.Instance.TriggerTransition("UndercookedBread");
+                        break;
+                        
+                    default:
+                        Debug.Log("Item not recognized.");
+                        SceneTransitioner.Instance.TriggerTransition("");
+                        break;
+                }
+                //CavedInBread
+
+                return "Good (acceptable)";}
 
         return "Unknown";
     }

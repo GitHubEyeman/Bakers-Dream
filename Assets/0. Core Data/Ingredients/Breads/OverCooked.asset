@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3086a1236c0cecd6dafcdead4d88be1c, type: 3}
   m_Name: OverCooked
   m_EditorClassIdentifier: Assembly-CSharp::IngredientsData
-  ingredientName: Overcooked Bread
+  ingredientName: OvercookedBread
   id: 0
   isBasicIngredients: 1
-  itemPrefab: {fileID: 7544493138497361474, guid: 8a571cfc0793b424ca52e1881587ce78, type: 3}
+  itemPrefab: {fileID: 8109880862964938252, guid: d96016ef0a35668299542d9126e74582, type: 3}
   itemSprite: {fileID: 21300000, guid: 6c0e0a555db67f0418d2732530b04bf2, type: 3}

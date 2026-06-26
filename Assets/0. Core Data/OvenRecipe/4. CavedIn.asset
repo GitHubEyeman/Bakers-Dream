@@ -15,9 +15,9 @@ MonoBehaviour:
   recipeName: 3. FlatBrick
   id: 0
   ingredientResult: {fileID: 11400000, guid: f3bce7fc83e1fd7d69e02e2bb60ebd2e, type: 2}
-  itemPrefab: {fileID: 7544493138497361474, guid: 8a571cfc0793b424ca52e1881587ce78, type: 3}
+  itemPrefab: {fileID: 8109880862964938252, guid: d96016ef0a35668299542d9126e74582, type: 3}
   requiredIngredients:
-  - itemName: 15
+  - itemName: 25
     amount: 1
   minTemperature: 150
   maxTemperature: 240

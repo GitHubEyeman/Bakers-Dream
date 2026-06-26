@@ -508,10 +508,30 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 187181461804534354, guid: d443f51d10d233612bf9d6cd81abd69d, type: 3}
       propertyPath: allIngredientsDatabase.Array.size
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 187181461804534354, guid: d443f51d10d233612bf9d6cd81abd69d, type: 3}
       propertyPath: 'allIngredientsDatabase.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 8bbaa626937b69c1baf754fd92ff4151, type: 2}
+    - target: {fileID: 187181461804534354, guid: d443f51d10d233612bf9d6cd81abd69d, type: 3}
+      propertyPath: 'allIngredientsDatabase.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: b34433e41faa0a1ccafbbfb4b00bef9e, type: 2}
+    - target: {fileID: 187181461804534354, guid: d443f51d10d233612bf9d6cd81abd69d, type: 3}
+      propertyPath: 'allIngredientsDatabase.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f2d42c893474b1e9abd3021fa3fa6f02, type: 2}
+    - target: {fileID: 187181461804534354, guid: d443f51d10d233612bf9d6cd81abd69d, type: 3}
+      propertyPath: 'allIngredientsDatabase.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 33359db59ecbda1c9a52aea0e0c015cf, type: 2}
+    - target: {fileID: 187181461804534354, guid: d443f51d10d233612bf9d6cd81abd69d, type: 3}
+      propertyPath: 'allIngredientsDatabase.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 3ae6228dbce3c90a796fd38501c184de, type: 2}
+    - target: {fileID: 187181461804534354, guid: d443f51d10d233612bf9d6cd81abd69d, type: 3}
+      propertyPath: 'allIngredientsDatabase.Array.data[5]'
       value: 
       objectReference: {fileID: 11400000, guid: f4e463f9d24ed97edaf289170c720b97, type: 2}
     - target: {fileID: 863808328162475462, guid: d443f51d10d233612bf9d6cd81abd69d, type: 3}
@@ -3128,8 +3148,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 2.0933776}
-  m_Center: {x: 0, y: 0, z: 0.5466888}
+  m_Size: {x: 1, y: 0.37746465, z: 1.9931059}
+  m_Center: {x: 0, y: 0.33950204, z: 0.49655294}
 --- !u!23 &1944390278
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3210,7 +3230,11 @@ MonoBehaviour:
   bounceDuration: 0.3
   ovenDoor: {fileID: 1509154183}
   itemSpawnPoint: {fileID: 1379158856}
-  recipe: {fileID: 11400000, guid: f1363881e9767baa8adfe62eff7fbb8a, type: 2}
+  recipes:
+  - {fileID: 11400000, guid: 262cd2313f874ef39835a5b7e43cfc8c, type: 2}
+  - {fileID: 11400000, guid: 21810b0026cfa26d3adf07353e0cedc8, type: 2}
+  - {fileID: 11400000, guid: 7c15bf51d815d411da22376d51998877, type: 2}
+  - {fileID: 11400000, guid: fb48c2317d4fba51dbac6bc65e6f247e, type: 2}
   currentTemperature: 0
   bakingPanel: {fileID: 508207308}
   OvenDoorButton: {fileID: 1061855933}

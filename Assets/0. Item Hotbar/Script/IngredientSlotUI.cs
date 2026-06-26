@@ -90,6 +90,7 @@ public void OnEndDrag(PointerEventData eventData)
         {
             dropZone.RemoveItemFromHotbar(data.ingredientName);
             dropZone.SpawnIngredient(data.itemPrefab);
+            dropZone.SetCurrentDough(data.ingredientName);
             Destroy(gameObject);
             return;
         }

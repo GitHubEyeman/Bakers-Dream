@@ -24,6 +24,18 @@ public class RecipeData : ScriptableObject
         FlatBrickDough,
         CavedInDough,
         OverCookedDough,
+        CavedInBread,
+        FlatBread,
+        GoldenBread,
+        OvercookedBread,
+        UndercookedBread,
+        GDough2,
+        UnderCookedDough2,
+        FlatBrickDough2,
+        CavedInDough2,
+        OverCookedDough2,
+        
+
     }
 
     [Serializable]

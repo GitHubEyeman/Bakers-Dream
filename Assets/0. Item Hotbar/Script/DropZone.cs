@@ -17,6 +17,7 @@ public class DropZone : MonoBehaviour
 
     public ParticleSystem ImpactParticlePrefab => impactParticlePrefab;
     public bool EnableCustomAnimationSettings => enableCustomAnimationSettings;
+    private String currentDough;
 
 
     public virtual void SpawnIngredient(GameObject prefab)
@@ -54,5 +55,53 @@ public class DropZone : MonoBehaviour
         }
     }
 
+    public void SetCurrentDough(String dough)
+    {
+        currentDough = dough;
+        Debug.Log("CURRENT DOUGH: "+currentDough);
+    }
+    public void GoToScene(String scene)
+    {
+        
+    }
     
+    public void FinishedKneading()
+    {
+        Debug.Log("CURRENTDOUGH   "+currentDough.ToLowerInvariant());
+        switch (currentDough.ToLowerInvariant())
+                {
+                    case "cavedindough":
+                        Debug.Log("cavedinbread");
+                        SaveManager.Instance.CurrentSave.AddToInventory("CavedInDough2");
+
+                        break;
+                        
+                    case "flatbrickdough":
+                        Debug.Log("flatbread");
+                        SaveManager.Instance.CurrentSave.AddToInventory("FlatBrickDough2");
+                        break;
+                                                
+                    case "gdough":
+                        Debug.Log("goldenbread");
+                        SaveManager.Instance.CurrentSave.AddToInventory("GDough2");
+                        break;
+                                                
+                    case "overcookeddough":
+                        Debug.Log("overcookedbread");
+                        SaveManager.Instance.CurrentSave.AddToInventory("OverCookedDough2");
+                        break;
+                                                
+                    case "undercookeddough":
+                        Debug.Log("undercookedbread");
+                        SaveManager.Instance.CurrentSave.AddToInventory("UnderCookedDough2");
+                        break;
+                        
+                    default:
+                        Debug.Log("Item not recognized.");
+                        SaveManager.Instance.CurrentSave.AddToInventory("CavedInDough2");
+                        break;
+                }
+
+        SceneTransitioner.Instance.TriggerTransition("3. Baking");
+    }
 }

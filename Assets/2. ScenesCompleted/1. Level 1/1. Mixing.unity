@@ -2858,6 +2858,17 @@ MonoBehaviour:
   RecipeDatas:
   - {fileID: 11400000, guid: 9aa22f076744fb1de8a188688eced4a0, type: 2}
   - {fileID: 11400000, guid: 4ec277c2cdfa6d8168bf990a49b48594, type: 2}
+  - {fileID: 11400000, guid: 5997715f64cc02418b088d03d3e81a9d, type: 2}
+  - {fileID: 11400000, guid: baa4e58c08a4b5b41b598a930f70b088, type: 2}
+  - {fileID: 11400000, guid: 61f1fe80e174a5202ac5e50e31525def, type: 2}
+  - {fileID: 11400000, guid: 704ab4cbe057ac83d89c0c484ddd5259, type: 2}
+  - {fileID: 11400000, guid: f4662d94c153f32feac94418fe8da94c, type: 2}
+  - {fileID: 11400000, guid: f4662d94c153f32feac94418fe8da94c, type: 2}
+  - {fileID: 11400000, guid: 2936db7455f5fdfedbec1b2ed10289d4, type: 2}
+  - {fileID: 11400000, guid: d9b3d837fda349f21b68964f8fe6a3c6, type: 2}
+  - {fileID: 11400000, guid: 21810b0026cfa26d3adf07353e0cedc8, type: 2}
+  - {fileID: 11400000, guid: 7c15bf51d815d411da22376d51998877, type: 2}
+  - {fileID: 11400000, guid: fb48c2317d4fba51dbac6bc65e6f247e, type: 2}
 --- !u!4 &629346840
 Transform:
   m_ObjectHideFlags: 0
@@ -5927,7 +5938,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -129.99994, y: 118.20001}
+  m_AnchoredPosition: {x: -130, y: 118.20001}
   m_SizeDelta: {x: -896.08, y: -651.92}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1280288211

@@ -229,7 +229,13 @@ public class DoughKneadingDirectInput : MonoBehaviour
         doughMesh.SetBlendShapeWeight(INDEX_PUSH, 0f);
 
         //StartTextureBlend( 0.95f, 0.1f);
-        SaveManager.Instance.CurrentSave.AddToInventory("Dough"); //TODO: Change this depending on recipe
+        // SaveManager.Instance.CurrentSave.AddToInventory("Dough"); //TODO: Change this depending on recipe
+
+        var DropZone = Object.FindAnyObjectByType<DropZone>();
+        DropZone.FinishedKneading();
+
+
+
         Debug.Log("Dough is perfectly kneaded!");
         this.enabled = false;
     }

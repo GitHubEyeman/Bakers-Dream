@@ -68,5 +68,7 @@ public class ButtonSoundScript : MonoBehaviour, IPointerEnterHandler, IPointerEx
     public void EnablePopupBox(bool enabled){ cursorManager.EnablePopupBox(enabled);}
     public void SetPopupBoxDirection(String direction) {cursorManager.SetPopupBoxPosition(direction);}
 
+    public void GoToScene (String scene) { SceneTransitioner.Instance.TriggerTransition(scene); }
+
 
 }

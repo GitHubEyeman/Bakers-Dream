@@ -15,9 +15,9 @@ MonoBehaviour:
   recipeName: 1. Golden Bread
   id: 0
   ingredientResult: {fileID: 11400000, guid: 9ae429cca4502abf7b062eeb9dc9d2c3, type: 2}
-  itemPrefab: {fileID: 370171535041137550, guid: c770296d0c3aa9540a0654f93ce4e1ca, type: 3}
+  itemPrefab: {fileID: 8109880862964938252, guid: c9967ffb8726523a3aadfcf21b0107d9, type: 3}
   requiredIngredients:
-  - itemName: 12
+  - itemName: 22
     amount: 1
   minTemperature: 150
   maxTemperature: 240

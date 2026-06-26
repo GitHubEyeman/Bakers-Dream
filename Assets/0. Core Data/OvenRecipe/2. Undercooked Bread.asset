@@ -15,9 +15,9 @@ MonoBehaviour:
   recipeName: 2. Undercooked Bread
   id: 0
   ingredientResult: {fileID: 11400000, guid: ca4ff4f47fa5e197291cbc173926bd81, type: 2}
-  itemPrefab: {fileID: 370171535041137550, guid: 4610e25b7d4acaae3a30ce616627226d, type: 3}
+  itemPrefab: {fileID: 8109880862964938252, guid: c06222cd6dbf09c6d9640285d144f31d, type: 3}
   requiredIngredients:
-  - itemName: 13
+  - itemName: 23
     amount: 1
   minTemperature: 150
   maxTemperature: 240
