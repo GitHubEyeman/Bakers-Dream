@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b99568b122ef0799db13e2747d49fc58, type: 3}
+  m_Name: New Test Recipe
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeName: htr5y4 Test
+  id: 0
+  ingredientResult: {fileID: 11400000, guid: e2b341792e488cc6bb5b40dc7d05e7c6, type: 2}
+  itemPrefab: {fileID: 0}
+  requiredIngredients:
+  - itemName: 3
+    amount: 100
+  - itemName: 10
+    amount: 2

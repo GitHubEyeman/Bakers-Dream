@@ -62,10 +62,13 @@ public class IngrePrep : MonoBehaviour
     public ScoopMeasure currentScoop = ScoopMeasure.FullScoops;
     public CupMeasure currentCup = CupMeasure.Fullcups;
     public IngredientType currentIngredient = IngredientType.None;
-    Dictionary<string, int> IngreList = new Dictionary<string, int>();
+    public Dictionary<string, int> IngreList = new Dictionary<string, int>();
 
     void Start()
     {
+        if (TipsPrompt != null)
+            TipsPrompt.text = "";
+
         if (CupRuler != null)
         {
             CupRuler.onValueChanged.AddListener((value) =>
