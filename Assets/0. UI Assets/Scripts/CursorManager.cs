@@ -43,6 +43,7 @@ public class CursorManager : MonoBehaviour
 
         if (Mouse.current.leftButton.isPressed) SetGrabState(true);
         else SetGrabState(false);
+        
     }
 
     public void SetGrabState(bool isDragging)
