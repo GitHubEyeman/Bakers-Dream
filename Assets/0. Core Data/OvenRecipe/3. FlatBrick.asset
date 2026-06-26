@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39917e9d55fd15bd382c0e89e594ec54, type: 3}
+  m_Name: 3. FlatBrick
+  m_EditorClassIdentifier: Assembly-CSharp::OvenRecipeData
+  recipeName: 3. FlatBrick
+  id: 0
+  ingredientResult: {fileID: 11400000, guid: 26bee4745e9b6b80597eb26fbf75b250, type: 2}
+  itemPrefab: {fileID: 7544493138497361474, guid: 8a571cfc0793b424ca52e1881587ce78, type: 3}
+  requiredIngredients:
+  - itemName: 14
+    amount: 1
+  minTemperature: 150
+  maxTemperature: 240
+  optimalTemperature: 190

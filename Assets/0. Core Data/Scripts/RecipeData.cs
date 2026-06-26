@@ -19,6 +19,11 @@ public class RecipeData : ScriptableObject
         Milk,
         Eggs,
         Dough,
+        GDough,
+        UnderCookedDough,
+        FlatBrickDough,
+        CavedInDough,
+        OverCookedDough,
     }
 
     [Serializable]

@@ -3257,7 +3257,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -325.99994, y: 65}
+  m_AnchoredPosition: {x: -326, y: 65}
   m_SizeDelta: {x: -926.56, y: -152.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &843447937
@@ -4930,6 +4930,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3355573805680116107, guid: 0191a66453c7fb584bc552269bb3733a, type: 3}
+      propertyPath: defaultSprite.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3355573805680116107, guid: 0191a66453c7fb584bc552269bb3733a, type: 3}
+      propertyPath: leftClickSprite.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3355573805680116107, guid: 0191a66453c7fb584bc552269bb3733a, type: 3}
+      propertyPath: 'defaultSprite.Array.data[2]'
+      value: 
+      objectReference: {fileID: 21300000, guid: 7bba30484478c174a8dd93b00b9b8e7f, type: 3}
+    - target: {fileID: 3355573805680116107, guid: 0191a66453c7fb584bc552269bb3733a, type: 3}
+      propertyPath: 'defaultSprite.Array.data[3]'
+      value: 
+      objectReference: {fileID: 21300000, guid: adeeca2a0055a394e84c7a11d82aeb8f, type: 3}
+    - target: {fileID: 3355573805680116107, guid: 0191a66453c7fb584bc552269bb3733a, type: 3}
+      propertyPath: 'leftClickSprite.Array.data[2]'
+      value: 
+      objectReference: {fileID: 21300000, guid: 7bba30484478c174a8dd93b00b9b8e7f, type: 3}
+    - target: {fileID: 3355573805680116107, guid: 0191a66453c7fb584bc552269bb3733a, type: 3}
+      propertyPath: 'leftClickSprite.Array.data[3]'
+      value: 
+      objectReference: {fileID: 21300000, guid: adeeca2a0055a394e84c7a11d82aeb8f, type: 3}
     - target: {fileID: 3912090726455713141, guid: 0191a66453c7fb584bc552269bb3733a, type: 3}
       propertyPath: m_Name
       value: CursorManager
@@ -8421,7 +8445,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -296.99994, y: 112}
+  m_AnchoredPosition: {x: -297, y: 112}
   m_SizeDelta: {x: -1538.9, y: -660.89}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1799468882
