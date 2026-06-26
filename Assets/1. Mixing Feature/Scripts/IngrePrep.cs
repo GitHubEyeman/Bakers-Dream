@@ -10,6 +10,7 @@ public class IngrePrep : MonoBehaviour
     [SerializeField] private Slider CupRuler;
     [SerializeField] private TextMeshProUGUI IngreListText; // assign in Inspector
     [SerializeField] private TextMeshProUGUI TipsPrompt; // assign in Inspector - displays tips/messages
+    [SerializeField] private TextMeshProUGUI Recipe; // assign in Inspector - displays recipe
 
     //Change MouseType - removed Whisk and Scale
     public enum MouseType
@@ -53,21 +54,62 @@ public class IngrePrep : MonoBehaviour
         Eggs,
     }
 
+    public enum RecipeType
+    {
+        None,
+        Bread,
+        Cupcake,
+        Pizza,
+    }
+
     // New explicit mappings for cup and scoop measurements (in ml and grams respectively)
     private static readonly int[] CupAmounts = { 500, 400, 300, 200, 100 }; // Full -> OneFifth
     private static readonly int[] ScoopAmounts = { 250, 125, 80, 62, 50 }; // Full -> OneFifth
+
+    // Recipe ingredient requirements (key: ingredient name, value: amount needed)
+    private Dictionary<RecipeType, Dictionary<string, int>> RecipeRequirements = new Dictionary<RecipeType, Dictionary<string, int>>()
+    {
+        { RecipeType.Bread, new Dictionary<string, int>()
+        {
+            { "Flour", 250 },        // grams
+            { "Water", 200 },        // ml
+            { "Salt", 50 },          // grams
+            { "Yeast", 62 }          // grams (QuarterScoops)
+        }},
+        { RecipeType.Cupcake, new Dictionary<string, int>()
+        {
+            { "Flour", 125 },        // grams
+            { "Sugar", 200 },        // grams
+            { "Butter", 1 },         // block
+            { "Eggs", 2 },           // units
+            { "Milk", 200 },         // ml
+            { "Honey", 100 }         // ml
+        }},
+        { RecipeType.Pizza, new Dictionary<string, int>()
+        {
+            { "Flour", 250 },        // grams
+            { "Water", 300 },        // ml
+            { "OliveOil", 100 },     // ml
+            { "Salt", 50 },          // grams
+            { "Yeast", 50 }          // grams (OneFifthScoops)
+        }},
+    };
 
     public float CupMeasurement;
     public MouseType currentMouseType = MouseType.Normal;
     public ScoopMeasure currentScoop = ScoopMeasure.FullScoops;
     public CupMeasure currentCup = CupMeasure.Fullcups;
     public IngredientType currentIngredient = IngredientType.None;
+    public RecipeType currentRecipe = RecipeType.Bread;
     public Dictionary<string, int> IngreList = new Dictionary<string, int>();
 
     void Start()
     {
         if (TipsPrompt != null)
             TipsPrompt.text = "";
+
+        if (Recipe != null)
+            DisplayRecipe();
 
         if (CupRuler != null)
         {
@@ -135,6 +177,88 @@ public class IngrePrep : MonoBehaviour
     {
         if (!enumType.IsEnum) return false;
         return index >= 0 && index < System.Enum.GetValues(enumType).Length;
+    }
+
+    // Recipe selection methods
+    public void SelectBreadRecipe()
+    {
+        currentRecipe = RecipeType.Bread;
+        DisplayRecipe();
+        ShowTip("Bread recipe selected");
+    }
+
+    public void SelectCupcakeRecipe()
+    {
+        currentRecipe = RecipeType.Cupcake;
+        DisplayRecipe();
+        ShowTip("Cupcake recipe selected");
+    }
+
+    public void SelectPizzaRecipe()
+    {
+        currentRecipe = RecipeType.Pizza;
+        DisplayRecipe();
+        ShowTip("Pizza recipe selected");
+    }
+
+    private void DisplayRecipe()
+    {
+        if (Recipe == null)
+        {
+            ShowTip("Recipe TextMeshPro not assigned");
+            return;
+        }
+
+        if (currentRecipe == RecipeType.None || !RecipeRequirements.ContainsKey(currentRecipe))
+        {
+            Recipe.text = "";
+            return;
+        }
+
+        var sb = new StringBuilder();
+        sb.Append(currentRecipe.ToString().ToUpper());
+        sb.AppendLine(" RECIPE");
+        sb.AppendLine();
+        sb.AppendLine("INGREDIENTS:");
+
+        var ingredients = RecipeRequirements[currentRecipe];
+        foreach (var ingredient in ingredients)
+        {
+            sb.Append("• ");
+            sb.Append(ingredient.Key);
+            sb.Append(": ");
+            sb.Append(ingredient.Value);
+
+            // Add appropriate unit based on ingredient
+            switch (ingredient.Key)
+            {
+                case "Flour":
+                case "Salt":
+                case "Sugar":
+                case "Yeast":
+                    sb.Append("g");
+                    break;
+
+                case "Water":
+                case "OliveOil":
+                case "Milk":
+                case "Honey":
+                    sb.Append("ml");
+                    break;
+
+                case "Butter":
+                    sb.Append(" block(s)");
+                    break;
+
+                case "Eggs":
+                    sb.Append(" unit(s)");
+                    break;
+            }
+
+            sb.AppendLine();
+        }
+
+        Recipe.text = sb.ToString();
     }
 
     // Scoop setters: single validated method for UI buttons (pass 0..4)
